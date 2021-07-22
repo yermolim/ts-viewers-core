@@ -1,5 +1,6 @@
 import { ByteUtils } from "./byte-utils";
 import { DomUtils } from "./dom-utils";
+import { BBox } from "./drawing/b-box";
 import { CloudCurveData } from "./drawing/clouds";
 import { SmoothPath, SmoothPathData, SmoothPathOptions } from "./drawing/smooth-path";
 import { SvgSmoothPath, SvgSmoothPathData, SvgSmoothPathOptions } from "./drawing/svg-smooth-path";
@@ -20,4 +21,5 @@ export {
   SmoothPath, SmoothPathData, SmoothPathOptions,
   SvgSmoothPath, SvgSmoothPathData, SvgSmoothPathOptions,
   SvgTempPath,
+  BBox,
 };

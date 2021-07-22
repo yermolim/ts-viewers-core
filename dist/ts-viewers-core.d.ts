@@ -25,6 +25,12 @@ export declare class DomUtils {
 	static downloadFile(blob: Blob, name?: string): void;
 	static loadImageAsync(url: string, revoke?: boolean): Promise<HTMLImageElement>;
 }
+export interface BBox {
+	ll: Vec2;
+	lr: Vec2;
+	ur: Vec2;
+	ul: Vec2;
+}
 export declare type CurveData = [
 	control1: Vec2,
 	control2: Vec2,
