@@ -271,6 +271,394 @@ class ByteUtils {
     }
 }
 
+class ContextMenu {
+    constructor() {
+        this.onPointerDownOutside = (e) => {
+            if (!this._shown) {
+                return;
+            }
+            const target = e.composedPath()[0];
+            if (!target.closest("#context-menu")) {
+                this.hide();
+            }
+        };
+        this._container = document.createElement("div");
+        this._container.id = "context-menu";
+        this.hide();
+        document.addEventListener("pointerdown", this.onPointerDownOutside);
+    }
+    set content(value) {
+        var _a;
+        (_a = this._content) === null || _a === void 0 ? void 0 : _a.forEach(x => x.remove());
+        if (value === null || value === void 0 ? void 0 : value.length) {
+            value.forEach(x => this._container.append(x));
+            this._content = value;
+        }
+        else {
+            this._content = null;
+        }
+    }
+    get enabled() {
+        return this._enabled;
+    }
+    set enabled(value) {
+        this._enabled = !!value;
+    }
+    destroy() {
+        this.clear();
+        document.removeEventListener("pointerdown", this.onPointerDownOutside);
+    }
+    show(pointerPosition, parent) {
+        parent.append(this._container);
+        this._shown = true;
+        setTimeout(() => {
+            this.setContextMenuPosition(pointerPosition, parent);
+            this._container.style.opacity = "1";
+        }, 0);
+    }
+    hide() {
+        this._container.style.opacity = "0";
+        this._container.remove();
+        this._shown = false;
+    }
+    clear() {
+        this.hide();
+        this.content = null;
+    }
+    setContextMenuPosition(pointerPosition, parent) {
+        const menuDimension = new Vec2(this._container.offsetWidth, this._container.offsetHeight);
+        const menuPosition = new Vec2();
+        const parentRect = parent.getBoundingClientRect();
+        const relPointerPosition = new Vec2(pointerPosition.x - parentRect.x, pointerPosition.y - parentRect.y);
+        if (relPointerPosition.x + menuDimension.x > parentRect.width + parentRect.x) {
+            menuPosition.x = relPointerPosition.x - menuDimension.x;
+        }
+        else {
+            menuPosition.x = relPointerPosition.x;
+        }
+        if (relPointerPosition.y + menuDimension.y > parentRect.height + parentRect.y) {
+            menuPosition.y = relPointerPosition.y - menuDimension.y;
+        }
+        else {
+            menuPosition.y = relPointerPosition.y;
+        }
+        this._container.style.left = menuPosition.x + parent.scrollLeft + "px";
+        this._container.style.top = menuPosition.y + parent.scrollTop + "px";
+    }
+}
+
+class SmoothPath {
+    constructor(options) {
+        this._paths = [];
+        this._positionBuffer = [];
+        this._bufferSize = (options === null || options === void 0 ? void 0 : options.bufferSize) || SmoothPath._defaultBufferSize;
+        this._id = options === null || options === void 0 ? void 0 : options.id;
+    }
+    get id() {
+        return this._id;
+    }
+    get bufferSize() {
+        return this._bufferSize;
+    }
+    get paths() {
+        return this._paths.slice();
+    }
+    get pathCount() {
+        return this._paths.length;
+    }
+    endPath() {
+        if (this._currentPath && this._currentPath.positions.length > 1) {
+            this._paths.push(this._currentPath);
+        }
+        this._positionBuffer = null;
+        this._currentPath = null;
+        this._currentPathString = null;
+    }
+    addPosition(pos) {
+        this.appendPositionToBuffer(pos);
+        this.updateCurrentPath();
+    }
+    appendPositionToBuffer(pos) {
+        const buffer = this._positionBuffer;
+        buffer.push(pos);
+        this._positionBuffer = buffer
+            .slice(Math.max(0, buffer.length - this._bufferSize), buffer.length);
+    }
+    getAverageBufferPosition(offset) {
+        const len = this._positionBuffer.length;
+        if (len >= this._bufferSize) {
+            let totalX = 0;
+            let totalY = 0;
+            let pos;
+            let i;
+            let count = 0;
+            for (i = offset; i < len; i++) {
+                count++;
+                pos = this._positionBuffer[i];
+                totalX += pos.x;
+                totalY += pos.y;
+            }
+            return new Vec2(totalX / count, totalY / count);
+        }
+        return null;
+    }
+    updateCurrentPath() {
+        let pos = this.getAverageBufferPosition(0);
+        if (!pos) {
+            return null;
+        }
+        this._currentPathString += " L" + pos.x + " " + pos.y;
+        this._currentPath.positions.push(pos);
+        let tmpPath = "";
+        for (let offset = 2; offset < this._positionBuffer.length; offset += 2) {
+            pos = this.getAverageBufferPosition(offset);
+            tmpPath += " L" + pos.x + " " + pos.y;
+        }
+        return tmpPath;
+    }
+}
+SmoothPath._defaultBufferSize = 8;
+
+class CanvasSmoothPathEditor extends SmoothPath {
+    constructor(container, options) {
+        super(options);
+        this._strokeWidth = CanvasSmoothPathEditor._defaultStrokeWidth;
+        this._color = CanvasSmoothPathEditor._colors[0];
+        this._paths = [];
+        this.onContextMenu = (event) => {
+            if (this._contextMenu.enabled) {
+                event.preventDefault();
+                this._contextMenu.show(new Vec2(event.clientX, event.clientY), this._container);
+            }
+        };
+        this.onPointerDown = (e) => {
+            if (!e.isPrimary || e.button === 2) {
+                return;
+            }
+            const { clientX: clX, clientY: clY } = e;
+            const [caX, caY] = this.convertClientCoordsToCanvas(clX, clY);
+            this.newPath(new Vec2(caX, caY));
+            const target = e.target;
+            target.addEventListener("pointermove", this.onPointerMove);
+            target.addEventListener("pointerup", this.onPointerUp);
+            target.addEventListener("pointerout", this.onPointerUp);
+            target.setPointerCapture(e.pointerId);
+        };
+        this.onPointerMove = (e) => {
+            if (!e.isPrimary) {
+                return;
+            }
+            const { clientX: clX, clientY: clY } = e;
+            const [caX, caY] = this.convertClientCoordsToCanvas(clX, clY);
+            this.addPosition(new Vec2(caX, caY));
+            this.refreshEditor();
+        };
+        this.onPointerUp = (e) => {
+            if (!e.isPrimary) {
+                return;
+            }
+            const target = e.target;
+            target.removeEventListener("pointermove", this.onPointerMove);
+            target.removeEventListener("pointerup", this.onPointerUp);
+            target.removeEventListener("pointerout", this.onPointerUp);
+            target.releasePointerCapture(e.pointerId);
+            this.endPath();
+            this.refreshEditor();
+        };
+        if (!container) {
+            throw new Error("Container is not defined");
+        }
+        if (!(options === null || options === void 0 ? void 0 : options.canvasWidth) || !options.canvasHeight) {
+            throw new Error("Canvas dimensions is not defined");
+        }
+        this._container = container;
+        this._canvas = document.createElement("canvas");
+        this._canvas.classList.add("abs-ratio-canvas");
+        this._canvas.width = options.canvasWidth;
+        this._canvas.height = options.canvasHeight;
+        this._canvas.addEventListener("pointerdown", this.onPointerDown);
+        this._contextMenu = new ContextMenu();
+        this.fillContextMenu();
+        this._container.append(this._canvas);
+        this._container.addEventListener("contextmenu", this.onContextMenu);
+    }
+    get canvas() {
+        return this._canvas;
+    }
+    get ctx() {
+        return this._canvas.getContext("2d");
+    }
+    get canvasSize() {
+        return [this._canvas.width, this._canvas.height];
+    }
+    set canvasSize(value) {
+        if (!value) {
+            return;
+        }
+        const [w, h] = value;
+        if (!w || !h) {
+            return;
+        }
+        if (w === this._canvas.width
+            && h === this._canvas.height) {
+            return;
+        }
+        this._canvas.width = w;
+        this._canvas.height = h;
+        this.refreshEditor();
+    }
+    get paths() {
+        return this._paths.slice();
+    }
+    destroy() {
+        this._canvas.remove();
+        this._container.removeEventListener("contextmenu", this.onContextMenu);
+        this._contextMenu.destroy();
+    }
+    getImageData() {
+        this.refreshEditor();
+        const imgData = this.ctx.getImageData(0, 0, this._canvas.width, this._canvas.height).data;
+        return imgData;
+    }
+    newPath(startPosition) {
+        const pathString = "M" + startPosition.x + " " + startPosition.y;
+        const path2d = new Path2D(pathString);
+        this._positionBuffer = [startPosition];
+        this._currentPath = {
+            strokeWidth: this._strokeWidth,
+            color: this._color,
+            path: path2d,
+            positions: [new Vec2(startPosition.x, startPosition.y)],
+        };
+        this._currentPathString = pathString;
+    }
+    removePath(path) {
+        if (!path) {
+            return;
+        }
+        this._paths = this._paths.filter(x => x.path !== path);
+        this.refreshEditor();
+    }
+    removeLastPath() {
+        this._paths.pop();
+        this.refreshEditor();
+    }
+    removeAllPaths() {
+        this._paths.length = 0;
+        this.refreshEditor();
+    }
+    updateCurrentPath() {
+        const tmpPath = super.updateCurrentPath();
+        if (tmpPath) {
+            this._currentPath.path = new Path2D(this._currentPathString + tmpPath);
+        }
+        return tmpPath;
+    }
+    refreshEditor() {
+        this.drawPaths();
+        this.fillContextMenu();
+    }
+    drawPaths() {
+        this.ctx.clearRect(0, 0, this._canvas.width, this._canvas.height);
+        (this._currentPath
+            ? [...this._paths, this._currentPath]
+            : this._paths).forEach(x => {
+            const [r, g, b, a] = x.color;
+            this.ctx.strokeStyle = `rgba(${r * 255},${g * 255},${b * 255},${a})`;
+            this.ctx.lineWidth = x.strokeWidth;
+            this.ctx.lineCap = "round";
+            this.ctx.lineJoin = "round";
+            this.ctx.stroke(x.path);
+        });
+    }
+    convertClientCoordsToCanvas(clX, clY) {
+        const { top, left, width, height } = this._canvas.getBoundingClientRect();
+        const caHorRatio = width / this._canvas.width;
+        const caVertRatio = height / this._canvas.height;
+        const caX = (clX - left) / caHorRatio;
+        const caY = (clY - top) / caVertRatio;
+        return [caX, caY];
+    }
+    fillContextMenu() {
+        const cmContent = [
+            this.buildColorPicker(),
+            this.buildWidthSliderWithButtons(),
+        ];
+        this._contextMenu.content = cmContent;
+        this._contextMenu.enabled = true;
+    }
+    buildColorPicker() {
+        const colorPickerDiv = document.createElement("div");
+        colorPickerDiv.classList.add("context-menu-content", "row");
+        CanvasSmoothPathEditor._colors.forEach(x => {
+            const item = document.createElement("div");
+            item.classList.add("panel-button");
+            if (x === this._color) {
+                item.classList.add("on");
+            }
+            item.addEventListener("click", () => {
+                this._color = x;
+                this.fillContextMenu();
+            });
+            const colorIcon = document.createElement("div");
+            colorIcon.classList.add("context-menu-color-icon");
+            colorIcon.style.backgroundColor = `rgb(${x[0] * 255},${x[1] * 255},${x[2] * 255})`;
+            item.append(colorIcon);
+            colorPickerDiv.append(item);
+        });
+        return colorPickerDiv;
+    }
+    buildWidthSliderWithButtons() {
+        const div = document.createElement("div");
+        div.classList.add("context-menu-content", "row");
+        const undoButton = document.createElement("div");
+        undoButton.classList.add("panel-button");
+        if (!this.pathCount) {
+            undoButton.classList.add("disabled");
+        }
+        else {
+            undoButton.addEventListener("click", () => {
+                this.removeLastPath();
+            });
+        }
+        undoButton.innerHTML = `<img src="${Icons.icon_back}"/>`;
+        div.append(undoButton);
+        const clearButton = document.createElement("div");
+        clearButton.classList.add("panel-button");
+        if (!this.pathCount) {
+            clearButton.classList.add("disabled");
+        }
+        else {
+            clearButton.addEventListener("click", () => {
+                this.removeAllPaths();
+            });
+        }
+        clearButton.innerHTML = `<img src="${Icons.icon_close}"/>`;
+        div.append(clearButton);
+        const slider = document.createElement("input");
+        slider.setAttribute("type", "range");
+        slider.setAttribute("min", "1");
+        slider.setAttribute("max", "32");
+        slider.setAttribute("step", "1");
+        slider.setAttribute("value", this._strokeWidth + "");
+        slider.classList.add("context-menu-slider");
+        slider.addEventListener("change", () => {
+            this._strokeWidth = slider.valueAsNumber;
+        });
+        div.append(slider);
+        return div;
+    }
+}
+CanvasSmoothPathEditor._defaultStrokeWidth = 3;
+CanvasSmoothPathEditor._colors = [
+    [0, 0, 0, 1],
+    [0.804, 0, 0, 1],
+    [0, 0.804, 0, 1],
+    [0, 0, 0.804, 1],
+    [1, 0.5, 0, 1],
+    [1, 0.2, 1, 1],
+];
+
 var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -340,6 +728,35 @@ class DomUtils {
         });
     }
 }
+
+class Loader {
+    constructor() {
+        this._loaderElement = DomUtils.htmlToElements(Loader.loaderHtml)[0];
+    }
+    show(parent, zIndex = 8) {
+        if (this._isShown || !parent) {
+            return;
+        }
+        this._loaderElement.style.zIndex = zIndex + "";
+        this._loaderElement.style.top = parent.scrollTop + "px";
+        this._loaderElement.style.left = parent.scrollLeft + "px";
+        parent.append(this._loaderElement);
+        this._isShown = true;
+    }
+    hide() {
+        this._loaderElement.remove();
+        this._isShown = false;
+    }
+}
+Loader.loaderHtml = `
+  <div class="abs-full-size-overlay">
+    <div class="loader">
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+  </div>
+  `;
 
 class CloudCurveData {
     static buildFromPolyline(polylinePoints, maxArcSize) {
@@ -417,78 +834,6 @@ class CloudCurveData {
         return curveData;
     }
 }
-
-class SmoothPath {
-    constructor(options) {
-        this._paths = [];
-        this._positionBuffer = [];
-        this._bufferSize = (options === null || options === void 0 ? void 0 : options.bufferSize) || SmoothPath._defaultBufferSize;
-        this._id = options === null || options === void 0 ? void 0 : options.id;
-    }
-    get id() {
-        return this._id;
-    }
-    get bufferSize() {
-        return this._bufferSize;
-    }
-    get paths() {
-        return this._paths.slice();
-    }
-    get pathCount() {
-        return this._paths.length;
-    }
-    endPath() {
-        if (this._currentPath && this._currentPath.positions.length > 1) {
-            this._paths.push(this._currentPath);
-        }
-        this._positionBuffer = null;
-        this._currentPath = null;
-        this._currentPathString = null;
-    }
-    addPosition(pos) {
-        this.appendPositionToBuffer(pos);
-        this.updateCurrentPath();
-    }
-    appendPositionToBuffer(pos) {
-        const buffer = this._positionBuffer;
-        buffer.push(pos);
-        this._positionBuffer = buffer
-            .slice(Math.max(0, buffer.length - this._bufferSize), buffer.length);
-    }
-    getAverageBufferPosition(offset) {
-        const len = this._positionBuffer.length;
-        if (len >= this._bufferSize) {
-            let totalX = 0;
-            let totalY = 0;
-            let pos;
-            let i;
-            let count = 0;
-            for (i = offset; i < len; i++) {
-                count++;
-                pos = this._positionBuffer[i];
-                totalX += pos.x;
-                totalY += pos.y;
-            }
-            return new Vec2(totalX / count, totalY / count);
-        }
-        return null;
-    }
-    updateCurrentPath() {
-        let pos = this.getAverageBufferPosition(0);
-        if (!pos) {
-            return null;
-        }
-        this._currentPathString += " L" + pos.x + " " + pos.y;
-        this._currentPath.positions.push(pos);
-        let tmpPath = "";
-        for (let offset = 2; offset < this._positionBuffer.length; offset += 2) {
-            pos = this.getAverageBufferPosition(offset);
-            tmpPath += " L" + pos.x + " " + pos.y;
-        }
-        return tmpPath;
-    }
-}
-SmoothPath._defaultBufferSize = 8;
 
 class SvgSmoothPath extends SmoothPath {
     constructor(options) {
@@ -827,4 +1172,4 @@ class UUID {
     }
 }
 
-export { ByteUtils, CloudCurveData, DomUtils, EventService, Icons, LinkedList, LinkedListNode, SmoothPath, SvgSmoothPath, SvgTempPath, UUID };
+export { ByteUtils, CanvasSmoothPathEditor, CloudCurveData, ContextMenu, DomUtils, EventService, Icons, LinkedList, LinkedListNode, Loader, SmoothPath, SvgSmoothPath, SvgTempPath, UUID };

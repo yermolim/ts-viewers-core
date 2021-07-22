@@ -62,55 +62,21 @@ export declare class ByteUtils {
 	static clearBit(n: number, bitPosition: number): number;
 	static updateBit(n: number, bitPosition: number, bitValue: boolean): number;
 }
-export declare class DomUtils {
-	static htmlToElements(html: string): HTMLElement[];
-	static promisify<T>(callback: () => T): Promise<T>;
-	static runEmptyTimeout(): Promise<void>;
-	static downloadFile(blob: Blob, name?: string): void;
-	static loadImageAsync(url: string, revoke?: boolean): Promise<HTMLImageElement>;
-}
-export interface BBox {
-	ll: Vec2;
-	lr: Vec2;
-	ur: Vec2;
-	ul: Vec2;
-}
-export declare type CurveData = [
-	control1: Vec2,
-	control2: Vec2,
-	end: Vec2
-];
-export declare class CloudCurveData {
-	start: Vec2;
-	curves: CurveData[];
-	static buildFromPolyline(polylinePoints: Vec2[], maxArcSize: number): CloudCurveData;
-	static buildFromEllipse(rx: number, ry: number, maxArcSize: number, matrix?: Mat3): CloudCurveData;
-}
-export interface SmoothPathData {
-	positions: Vec2[];
-}
-export interface SmoothPathOptions {
-	bufferSize?: number;
-	id?: number;
-}
-export declare abstract class SmoothPath {
-	private static readonly _defaultBufferSize;
-	protected readonly _id: number;
-	get id(): number;
-	protected readonly _bufferSize: number;
-	get bufferSize(): number;
-	protected _currentPath: SmoothPathData;
-	protected _paths: SmoothPathData[];
-	get paths(): SmoothPathData[];
-	get pathCount(): number;
-	protected _positionBuffer: Vec2[];
-	protected _currentPathString: string;
-	constructor(options?: SmoothPathOptions);
-	endPath(): void;
-	addPosition(pos: Vec2): void;
-	protected appendPositionToBuffer(pos: Vec2): void;
-	protected getAverageBufferPosition(offset: number): Vec2;
-	protected updateCurrentPath(): string;
+export declare class ContextMenu {
+	private _container;
+	private _shown;
+	private _content;
+	set content(value: HTMLElement[]);
+	private _enabled;
+	get enabled(): boolean;
+	set enabled(value: boolean);
+	constructor();
+	destroy(): void;
+	show(pointerPosition: Vec2, parent: HTMLElement): void;
+	hide(): void;
+	clear(): void;
+	private onPointerDownOutside;
+	private setContextMenuPosition;
 }
 export declare type Double = readonly [
 	x: number,
@@ -140,6 +106,116 @@ export declare type Octuple = readonly [
 	x4: number,
 	y4: number
 ];
+export interface SmoothPathData {
+	positions: Vec2[];
+}
+export interface SmoothPathOptions {
+	bufferSize?: number;
+	id?: number;
+}
+export declare abstract class SmoothPath {
+	private static readonly _defaultBufferSize;
+	protected readonly _id: number;
+	get id(): number;
+	protected readonly _bufferSize: number;
+	get bufferSize(): number;
+	protected _currentPath: SmoothPathData;
+	protected _paths: SmoothPathData[];
+	get paths(): SmoothPathData[];
+	get pathCount(): number;
+	protected _positionBuffer: Vec2[];
+	protected _currentPathString: string;
+	constructor(options?: SmoothPathOptions);
+	endPath(): void;
+	addPosition(pos: Vec2): void;
+	protected appendPositionToBuffer(pos: Vec2): void;
+	protected getAverageBufferPosition(offset: number): Vec2;
+	protected updateCurrentPath(): string;
+}
+export interface CanvasSmoothPathData extends SmoothPathData {
+	path: Path2D;
+	strokeWidth: number;
+	color: Quadruple;
+}
+export interface CanvasSmoothPathOptions extends SmoothPathOptions {
+	canvasWidth: number;
+	canvasHeight: number;
+}
+export declare class CanvasSmoothPathEditor extends SmoothPath {
+	private static readonly _defaultStrokeWidth;
+	private static readonly _colors;
+	protected readonly _container: HTMLElement;
+	protected readonly _canvas: HTMLCanvasElement;
+	get canvas(): HTMLCanvasElement;
+	get ctx(): CanvasRenderingContext2D;
+	get canvasSize(): [
+		w: number,
+		h: number
+	];
+	set canvasSize(value: [
+		w: number,
+		h: number
+	]);
+	protected readonly _contextMenu: ContextMenu;
+	protected _strokeWidth: number;
+	protected _color: Quadruple;
+	protected _currentPath: CanvasSmoothPathData;
+	protected _paths: CanvasSmoothPathData[];
+	get paths(): CanvasSmoothPathData[];
+	constructor(container: HTMLElement, options: CanvasSmoothPathOptions);
+	destroy(): void;
+	getImageData(): Uint8ClampedArray;
+	newPath(startPosition: Vec2): void;
+	removePath(path: Path2D): void;
+	removeLastPath(): void;
+	removeAllPaths(): void;
+	protected updateCurrentPath(): string;
+	protected refreshEditor(): void;
+	protected drawPaths(): void;
+	protected convertClientCoordsToCanvas(clX: number, clY: number): [
+		caX: number,
+		caY: number
+	];
+	protected onContextMenu: (event: MouseEvent) => void;
+	protected onPointerDown: (e: PointerEvent) => void;
+	protected onPointerMove: (e: PointerEvent) => void;
+	protected onPointerUp: (e: PointerEvent) => void;
+	protected fillContextMenu(): void;
+	protected buildColorPicker(): HTMLElement;
+	protected buildWidthSliderWithButtons(): HTMLElement;
+}
+export declare class Loader {
+	static readonly loaderHtml = "\n  <div class=\"abs-full-size-overlay\">\n    <div class=\"loader\">\n      <div></div>\n      <div></div>\n      <div></div>\n    </div>\n  </div>\n  ";
+	protected readonly _loaderElement: HTMLElement;
+	protected _isShown: boolean;
+	constructor();
+	show(parent: HTMLElement, zIndex?: number): void;
+	hide(): void;
+}
+export declare class DomUtils {
+	static htmlToElements(html: string): HTMLElement[];
+	static promisify<T>(callback: () => T): Promise<T>;
+	static runEmptyTimeout(): Promise<void>;
+	static downloadFile(blob: Blob, name?: string): void;
+	static loadImageAsync(url: string, revoke?: boolean): Promise<HTMLImageElement>;
+}
+export interface BBox {
+	ll: Vec2;
+	lr: Vec2;
+	ur: Vec2;
+	ul: Vec2;
+}
+export declare type CurveData = [
+	control1: Vec2,
+	control2: Vec2,
+	end: Vec2
+];
+export declare class CloudCurveData {
+	start: Vec2;
+	curves: CurveData[];
+	static buildFromPolyline(polylinePoints: Vec2[], maxArcSize: number): CloudCurveData;
+	static buildFromEllipse(rx: number, ry: number, maxArcSize: number, matrix?: Mat3): CloudCurveData;
+}
 export interface SvgSmoothPathData extends SmoothPathData {
 	path: SVGPathElement;
 }

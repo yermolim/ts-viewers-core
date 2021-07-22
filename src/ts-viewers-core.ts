@@ -1,5 +1,8 @@
 import { Icons } from "./assets/icons";
 import { ByteUtils } from "./byte-utils";
+import { CanvasSmoothPathEditor } from "./components/canvas-smooth-path-editor";
+import { ContextMenu } from "./components/context-menu";
+import { Loader } from "./components/loader";
 import { DomUtils } from "./dom-utils";
 import { BBox } from "./drawing/b-box";
 import { CloudCurveData } from "./drawing/clouds";
@@ -24,4 +27,7 @@ export {
   SvgTempPath,
   BBox,
   Icons,
+  Loader,
+  ContextMenu,
+  CanvasSmoothPathEditor,
 };
