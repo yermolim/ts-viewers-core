@@ -289,6 +289,168 @@ class CloudCurveData {
     }
 }
 
+class SmoothPath {
+    constructor(options) {
+        this._paths = [];
+        this._positionBuffer = [];
+        this._bufferSize = (options === null || options === void 0 ? void 0 : options.bufferSize) || SmoothPath._defaultBufferSize;
+        this._id = options === null || options === void 0 ? void 0 : options.id;
+    }
+    get id() {
+        return this._id;
+    }
+    get bufferSize() {
+        return this._bufferSize;
+    }
+    get paths() {
+        return this._paths.slice();
+    }
+    get pathCount() {
+        return this._paths.length;
+    }
+    endPath() {
+        if (this._currentPath && this._currentPath.positions.length > 1) {
+            this._paths.push(this._currentPath);
+        }
+        this._positionBuffer = null;
+        this._currentPath = null;
+        this._currentPathString = null;
+    }
+    addPosition(pos) {
+        this.appendPositionToBuffer(pos);
+        this.updateCurrentPath();
+    }
+    appendPositionToBuffer(pos) {
+        const buffer = this._positionBuffer;
+        buffer.push(pos);
+        this._positionBuffer = buffer
+            .slice(Math.max(0, buffer.length - this._bufferSize), buffer.length);
+    }
+    getAverageBufferPosition(offset) {
+        const len = this._positionBuffer.length;
+        if (len >= this._bufferSize) {
+            let totalX = 0;
+            let totalY = 0;
+            let pos;
+            let i;
+            let count = 0;
+            for (i = offset; i < len; i++) {
+                count++;
+                pos = this._positionBuffer[i];
+                totalX += pos.x;
+                totalY += pos.y;
+            }
+            return new Vec2(totalX / count, totalY / count);
+        }
+        return null;
+    }
+    updateCurrentPath() {
+        let pos = this.getAverageBufferPosition(0);
+        if (!pos) {
+            return null;
+        }
+        this._currentPathString += " L" + pos.x + " " + pos.y;
+        this._currentPath.positions.push(pos);
+        let tmpPath = "";
+        for (let offset = 2; offset < this._positionBuffer.length; offset += 2) {
+            pos = this.getAverageBufferPosition(offset);
+            tmpPath += " L" + pos.x + " " + pos.y;
+        }
+        return tmpPath;
+    }
+}
+SmoothPath._defaultBufferSize = 8;
+
+class SvgSmoothPath extends SmoothPath {
+    constructor(options) {
+        super(options);
+        this._paths = [];
+        this._strokeWidth = (options === null || options === void 0 ? void 0 : options.strokeWidth) || SvgSmoothPath._defaultStrokeWidth;
+        this._color = (options === null || options === void 0 ? void 0 : options.color) || SvgSmoothPath._defaultColor;
+        this._group = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    }
+    get strokeWidth() {
+        return this._strokeWidth;
+    }
+    get color() {
+        return this._color;
+    }
+    get group() {
+        return this._group;
+    }
+    get paths() {
+        return this._paths.slice();
+    }
+    newPath(startPosition) {
+        const [r, g, b, a] = this._color || [0, 0, 0, 1];
+        const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        path.setAttribute("fill", "none");
+        path.setAttribute("stroke", `rgba(${r * 255},${g * 255},${b * 255},${a})`);
+        path.setAttribute("stroke-width", this._strokeWidth + "");
+        path.setAttribute("stroke-linecap", "round");
+        path.setAttribute("stroke-linejoin", "round");
+        const pathString = "M" + startPosition.x + " " + startPosition.y;
+        path.setAttribute("d", pathString);
+        this._positionBuffer = [startPosition];
+        this._currentPath = { path, positions: [new Vec2(startPosition.x, startPosition.y)] };
+        this._currentPathString = pathString;
+        this._group.append(path);
+    }
+    removePath(path) {
+        if (!path) {
+            return;
+        }
+        path.remove();
+        this._paths = this._paths.filter(x => x.path !== path);
+    }
+    removeLastPath() {
+        const pathData = this._paths.pop();
+        pathData === null || pathData === void 0 ? void 0 : pathData.path.remove();
+    }
+    updateCurrentPath() {
+        const tmpPath = super.updateCurrentPath();
+        if (tmpPath) {
+            this._currentPath.path.setAttribute("d", this._currentPathString + tmpPath);
+        }
+        return tmpPath;
+    }
+}
+SvgSmoothPath._defaultStrokeWidth = 3;
+SvgSmoothPath._defaultColor = [0, 0, 0, 0.8];
+
+class SvgTempPath {
+    constructor() {
+        this._path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    }
+    get path() {
+        return this._path;
+    }
+    set(fill, stroke, w, points, close = false) {
+        let d = "";
+        if ((points === null || points === void 0 ? void 0 : points.length) > 1) {
+            d += `M${points[0].x},${points[0].y} `;
+            for (let i = 1; i < points.length; i++) {
+                d += `L${points[i].x},${points[i].y} `;
+            }
+            if (close) {
+                d += "Z";
+            }
+        }
+        this._path.classList.add("annotation-temp-copy");
+        this._path.setAttribute("d", d);
+        this._path.style.fill = fill;
+        this._path.style.stroke = stroke;
+        this._path.style.strokeWidth = w + "";
+    }
+    insertAfter(element) {
+        element.after(this._path);
+    }
+    remove() {
+        this._path.setAttribute("d", "");
+        this._path.remove();
+    }
+}
+
 class EventService {
     constructor(container) {
         this._eventMap = new Map();
@@ -536,4 +698,4 @@ class UUID {
     }
 }
 
-export { ByteUtils, CloudCurveData, DomUtils, EventService, LinkedList, LinkedListNode, UUID };
+export { ByteUtils, CloudCurveData, DomUtils, EventService, LinkedList, LinkedListNode, SmoothPath, SvgSmoothPath, SvgTempPath, UUID };

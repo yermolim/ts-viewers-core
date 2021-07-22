@@ -36,6 +36,95 @@ export declare class CloudCurveData {
 	static buildFromPolyline(polylinePoints: Vec2[], maxArcSize: number): CloudCurveData;
 	static buildFromEllipse(rx: number, ry: number, maxArcSize: number, matrix?: Mat3): CloudCurveData;
 }
+export interface SmoothPathData {
+	positions: Vec2[];
+}
+export interface SmoothPathOptions {
+	bufferSize?: number;
+	id?: number;
+}
+export declare abstract class SmoothPath {
+	private static readonly _defaultBufferSize;
+	protected readonly _id: number;
+	get id(): number;
+	protected readonly _bufferSize: number;
+	get bufferSize(): number;
+	protected _currentPath: SmoothPathData;
+	protected _paths: SmoothPathData[];
+	get paths(): SmoothPathData[];
+	get pathCount(): number;
+	protected _positionBuffer: Vec2[];
+	protected _currentPathString: string;
+	constructor(options?: SmoothPathOptions);
+	endPath(): void;
+	addPosition(pos: Vec2): void;
+	protected appendPositionToBuffer(pos: Vec2): void;
+	protected getAverageBufferPosition(offset: number): Vec2;
+	protected updateCurrentPath(): string;
+}
+export declare type Double = readonly [
+	x: number,
+	y: number
+];
+export declare type Quadruple = readonly [
+	x1: number,
+	y1: number,
+	x2: number,
+	y2: number
+];
+export declare type Hextuple = readonly [
+	a: number,
+	b: number,
+	d: number,
+	e: number,
+	g: number,
+	h: number
+];
+export declare type Octuple = readonly [
+	x1: number,
+	y1: number,
+	x2: number,
+	y2: number,
+	x3: number,
+	y3: number,
+	x4: number,
+	y4: number
+];
+export interface SvgSmoothPathData extends SmoothPathData {
+	path: SVGPathElement;
+}
+export interface SvgSmoothPathOptions extends SmoothPathOptions {
+	bufferSize?: number;
+	strokeWidth?: number;
+	color?: Quadruple;
+	id?: number;
+}
+export declare class SvgSmoothPath extends SmoothPath {
+	private static readonly _defaultStrokeWidth;
+	private static readonly _defaultColor;
+	protected _strokeWidth: number;
+	get strokeWidth(): number;
+	protected _color: Quadruple;
+	get color(): Quadruple;
+	protected _group: SVGGraphicsElement;
+	get group(): SVGGraphicsElement;
+	protected _currentPath: SvgSmoothPathData;
+	protected _paths: SvgSmoothPathData[];
+	get paths(): SvgSmoothPathData[];
+	constructor(options?: SvgSmoothPathOptions);
+	newPath(startPosition: Vec2): void;
+	removePath(path: SVGPathElement): void;
+	removeLastPath(): void;
+	protected updateCurrentPath(): string;
+}
+export declare class SvgTempPath {
+	protected readonly _path: SVGPathElement;
+	get path(): SVGGElement;
+	constructor();
+	set(fill: string, stroke: string, w: number, points: Vec2[], close?: boolean): void;
+	insertAfter(element: Element): void;
+	remove(): void;
+}
 export declare type ListenerLike = (this: HTMLElement, e: any) => any;
 export declare class EventService {
 	private _element;
@@ -74,34 +163,6 @@ export declare class LinkedList<T> {
 	findIndex(value: T, comparator?: (a: T, b: T) => boolean): number;
 	[Symbol.iterator](): Generator<T, void, unknown>;
 }
-export declare type Double = readonly [
-	x: number,
-	y: number
-];
-export declare type Quadruple = readonly [
-	x1: number,
-	y1: number,
-	x2: number,
-	y2: number
-];
-export declare type Hextuple = readonly [
-	a: number,
-	b: number,
-	d: number,
-	e: number,
-	g: number,
-	h: number
-];
-export declare type Octuple = readonly [
-	x1: number,
-	y1: number,
-	x2: number,
-	y2: number,
-	x3: number,
-	y3: number,
-	x4: number,
-	y4: number
-];
 export declare class UUID {
 	static getRandomUuid(): string;
 }
