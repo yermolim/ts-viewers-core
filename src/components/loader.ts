@@ -1,4 +1,4 @@
-import { DomUtils } from "../dom-utils";
+import { DomUtils } from "../common/dom-utils";
 
 export class Loader {  
   static readonly loaderHtml = /*html*/`

@@ -1,4 +1,4 @@
-import { Quadruple } from "./tuple-types";
+import { Quadruple } from "../common/tuple-types";
 
 export interface StampCreationInfo {
   subject: string;

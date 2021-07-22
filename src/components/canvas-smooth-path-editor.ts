@@ -1,7 +1,7 @@
 import { Vec2 } from "mathador";
 
 import { ContextMenu } from "./context-menu";
-import { Quadruple } from "../tuple-types";
+import { Quadruple } from "../common/tuple-types";
 import { SmoothPath, SmoothPathData, SmoothPathOptions } from "../drawing/smooth-path";
 import { Icons } from "../assets/icons";
 

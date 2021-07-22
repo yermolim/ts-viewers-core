@@ -1,9 +1,9 @@
 import { Icons } from "../assets/icons";
 import { CanvasSmoothPathEditor } from "../components/canvas-smooth-path-editor";
 import { Loader } from "../components/loader";
-import { DomUtils } from "../dom-utils";
-import { CustomStampCreationInfo } from "../stamps";
-import { UUID } from "../uuid";
+import { DomUtils } from "../common/dom-utils";
+import { CustomStampCreationInfo } from "../drawing/stamps";
+import { UUID } from "../common/uuid";
 import { EventService } from "./event-service";
 
 const stampImageLoaderHtml = /*html*/`

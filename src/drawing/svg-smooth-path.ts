@@ -1,5 +1,5 @@
 import { Vec2 } from "mathador";
-import { Quadruple } from "../tuple-types";
+import { Quadruple } from "../common/tuple-types";
 import { SmoothPath, SmoothPathData, SmoothPathOptions } from "./smooth-path";
 
 export interface SvgSmoothPathData extends SmoothPathData {
