@@ -110,51 +110,49 @@ var img$1 = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeA
 var img = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAABb2lDQ1BpY2MAACiRdZHNK0RRGMZ/M4gYUSwk6S6GKFOiZKlRZoPFGGWwuffOnRk1M273zqTJVtlYTFmIja+F/4CtsqWUIiXZ+Ad8bTRd7zFqJHNu576/nnOet3OeA/7pjJl164chm8s70UhYW4gvao3P1NNDO4P06qZrz8xNxag5Pm7xqXoTUr1q7/t3tCQs1wRfk/CYaTt54Qnh6bW8rXhLuNNM6wnhA+EhRw4ofKl0o8JPilMVflPsxKKT4Fc9tdQvNn6xmXaywgPCwWymYP6cR90kYOXm56R2y+zBJUqEMBoGBVbIkCckNSeZ/e8b/vbNsioeU/42RRxxpEiLd0jUgnS1pCZFt+TLUFS5/83TTY6OVLoHwtDw6HmvfdC4DeWS530eel75COoe4DxX9a9KTuPvopeqWnAf2jbg9KKqGTtwtgld97bu6N9SnUx/MgkvJ9Aah45raF6qZPWzzvEdxNblia5gdw/6ZX/b8hco4WgdZKtgqgAAAAlwSFlzAAALEwAACxMBAJqcGAAAANNJREFUeNrt2tEKwyAMhWEz9gSr7/+qjg0GvZ3dVMwX8K6F5OfkRFtLSR7R+V7bpZ7YqPiumm7ZWwCA7ADuk8ynreJH6RRQa32vKwDiR6P0H8qLUQqI01ph7H2dy0cFpkDm4l8qoAAAAHAcnhFtlVy0AABOg7nicRxMUAsAAAAAAAAAQE4ANkJaAAAAAAAAAAAAAAAAAAAAAAAA0v0ZOl+RowAAxrVA63hmyCeyWKT4afnxgOwAYiEPmJVbvn3A1evyQmxogi1r/ZG4eCYIAA+w2SpPUykQkfN9GyAAAAAASUVORK5CYII=";
 
 class Icons {
-    constructor() {
-        this.icon_arrow = img$F;
-        this.icon_arrow_up = img$E;
-        this.icon_arrow_down = img$D;
-        this.icon_arrow_left = img$C;
-        this.icon_arrow_right = img$B;
-        this.icon_back = img$A;
-        this.icon_caret = img$z;
-        this.icon_circle = img$y;
-        this.icon_clockwise = img$x;
-        this.icon_counter_clockwise = img$w;
-        this.icon_close = img$v;
-        this.icon_close2 = img$u;
-        this.icon_cloudy = img$t;
-        this.icon_delete = img$s;
-        this.icon_download = img$r;
-        this.icon_fit_page = img$q;
-        this.icon_fit_viewer = img$p;
-        this.icon_geometric = img$o;
-        this.icon_hand = img$n;
-        this.icon_line = img$m;
-        this.icon_load = img$l;
-        this.icon_minus = img$k;
-        this.icon_ok = img$j;
-        this.icon_pen = img$i;
-        this.icon_plus = img$h;
-        this.icon_pointer = img$g;
-        this.icon_polygon = img$f;
-        this.icon_polyline = img$e;
-        this.icon_popup = img$d;
-        this.icon_popup2 = img$c;
-        this.icon_sidebar = img$b;
-        this.icon_square = img$a;
-        this.icon_stamp = img$9;
-        this.icon_straight = img$8;
-        this.icon_text = img$7;
-        this.icon_text2 = img$6;
-        this.icon_text_free = img$5;
-        this.icon_text_callout = img$4;
-        this.icon_text_highlight = img$3;
-        this.icon_text_squiggly = img$2;
-        this.icon_text_strikeout = img$1;
-        this.icon_text_underline = img;
-    }
 }
+Icons.icon_arrow = img$F;
+Icons.icon_arrow_up = img$E;
+Icons.icon_arrow_down = img$D;
+Icons.icon_arrow_left = img$C;
+Icons.icon_arrow_right = img$B;
+Icons.icon_back = img$A;
+Icons.icon_caret = img$z;
+Icons.icon_circle = img$y;
+Icons.icon_clockwise = img$x;
+Icons.icon_counter_clockwise = img$w;
+Icons.icon_close = img$v;
+Icons.icon_close2 = img$u;
+Icons.icon_cloudy = img$t;
+Icons.icon_delete = img$s;
+Icons.icon_download = img$r;
+Icons.icon_fit_page = img$q;
+Icons.icon_fit_viewer = img$p;
+Icons.icon_geometric = img$o;
+Icons.icon_hand = img$n;
+Icons.icon_line = img$m;
+Icons.icon_load = img$l;
+Icons.icon_minus = img$k;
+Icons.icon_ok = img$j;
+Icons.icon_pen = img$i;
+Icons.icon_plus = img$h;
+Icons.icon_pointer = img$g;
+Icons.icon_polygon = img$f;
+Icons.icon_polyline = img$e;
+Icons.icon_popup = img$d;
+Icons.icon_popup2 = img$c;
+Icons.icon_sidebar = img$b;
+Icons.icon_square = img$a;
+Icons.icon_stamp = img$9;
+Icons.icon_straight = img$8;
+Icons.icon_text = img$7;
+Icons.icon_text2 = img$6;
+Icons.icon_text_free = img$5;
+Icons.icon_text_callout = img$4;
+Icons.icon_text_highlight = img$3;
+Icons.icon_text_squiggly = img$2;
+Icons.icon_text_strikeout = img$1;
+Icons.icon_text_underline = img;
 
 class ByteUtils {
     static parseIntFromBytes(bytes) {
