@@ -153,6 +153,29 @@ Icons.icon_text_highlight = img$3;
 Icons.icon_text_squiggly = img$2;
 Icons.icon_text_strikeout = img$1;
 Icons.icon_text_underline = img;
+Icons.geometricIcons = {
+    square: `<img src="${Icons.icon_square}"/>`,
+    circle: `<img src="${Icons.icon_circle}"/>`,
+    line: `<img src="${Icons.icon_line}"/>`,
+    arrow: `<img src="${Icons.icon_arrow}"/>`,
+    polyline: `<img src="${Icons.icon_polyline}"/>`,
+    polygon: `<img src="${Icons.icon_polygon}"/>`,
+};
+Icons.textIcons = {
+    note: `<img src="${Icons.icon_popup2}"/>`,
+    freeText: `<img src="${Icons.icon_text_free}"/>`,
+    freeTextCallout: `<img src="${Icons.icon_text_callout}"/>`,
+};
+Icons.lineTypeIcons = {
+    straight: `<img src="${Icons.icon_straight}"/>`,
+    cloudy: `<img src="${Icons.icon_cloudy}"/>`,
+};
+Icons.editIcons = {
+    close: `<img src="${Icons.icon_close}"/>`,
+    ok: `<img src="${Icons.icon_ok}"/>`,
+    back: `<img src="${Icons.icon_back}"/>`,
+    delete: `<img src="${Icons.icon_delete}"/>`,
+};
 
 function getCommonStyles(appName) {
     return `

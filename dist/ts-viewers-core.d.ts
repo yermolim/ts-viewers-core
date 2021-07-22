@@ -45,6 +45,29 @@ export declare class Icons {
 	static readonly icon_text_squiggly: any;
 	static readonly icon_text_strikeout: any;
 	static readonly icon_text_underline: any;
+	static readonly geometricIcons: {
+		readonly square: `<img src="${any}"/>`;
+		readonly circle: `<img src="${any}"/>`;
+		readonly line: `<img src="${any}"/>`;
+		readonly arrow: `<img src="${any}"/>`;
+		readonly polyline: `<img src="${any}"/>`;
+		readonly polygon: `<img src="${any}"/>`;
+	};
+	static readonly textIcons: {
+		readonly note: `<img src="${any}"/>`;
+		readonly freeText: `<img src="${any}"/>`;
+		readonly freeTextCallout: `<img src="${any}"/>`;
+	};
+	static readonly lineTypeIcons: {
+		readonly straight: `<img src="${any}"/>`;
+		readonly cloudy: `<img src="${any}"/>`;
+	};
+	static readonly editIcons: {
+		readonly close: `<img src="${any}"/>`;
+		readonly ok: `<img src="${any}"/>`;
+		readonly back: `<img src="${any}"/>`;
+		readonly delete: `<img src="${any}"/>`;
+	};
 }
 export declare function getCommonStyles(appName: string): string;
 export declare class ByteUtils {
