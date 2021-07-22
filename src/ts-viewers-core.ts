@@ -17,6 +17,7 @@ import { Double, Quadruple, Hextuple, Octuple } from "./common/tuple-types";
 import { UUID } from "./common/uuid";
 import { CustomStampService, customStampEvent, CustomStampEvent, 
   CustomStampEventDetail } from "./services/custom-stamp-service";
+import { HtmlTemplates } from "./assets/html";
 
 export { 
   ByteUtils, 
@@ -35,6 +36,7 @@ export {
   ContextMenu,
   CanvasSmoothPathEditor,
   getCommonStyles,
+  HtmlTemplates,
   StampCreationInfo, CustomStampCreationInfo,
   CustomStampService, customStampEvent, CustomStampEvent, CustomStampEventDetail,
 };

@@ -358,5 +358,9 @@ export declare class CustomStampService {
 	private openImageLoaderOverlayAsync;
 	private openDesignerOverlayAsync;
 }
+export declare class HtmlTemplates {
+	static readonly textDialogHtml: string;
+	static readonly stampContextButtonsHtml: string;
+}
 
 export {};
