@@ -23,5 +23,6 @@ export declare class DomUtils {
 	static downloadFile(blob: Blob, name?: string): void;
 	static loadImageAsync(url: string, revoke?: boolean): Promise<HTMLImageElement>;
 }
+export declare function getRandomUuid(): string;
 
 export {};

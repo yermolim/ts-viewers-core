@@ -22,6 +22,8 @@
  * SOFTWARE.
  */
 
+import { v4 } from 'uuid';
+
 class ByteUtils {
     static parseIntFromBytes(bytes) {
         if (!(bytes === null || bytes === void 0 ? void 0 : bytes.length)) {
@@ -209,4 +211,8 @@ class DomUtils {
     }
 }
 
-export { ByteUtils, DomUtils };
+function getRandomUuid() {
+    return v4();
+}
+
+export { ByteUtils, DomUtils, getRandomUuid };
