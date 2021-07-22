@@ -12,6 +12,7 @@ import { SvgSmoothPath, SvgSmoothPathData, SvgSmoothPathOptions } from "./drawin
 import { SvgTempPath } from "./drawing/svg-temp-path";
 import { EventService, ListenerLike } from "./event-service";
 import { LinkedList, LinkedListNode } from "./linked-list";
+import { StampCreationInfo, CustomStampCreationInfo } from "./stamps";
 import { Double, Quadruple, Hextuple, Octuple } from "./tuple-types";
 import { UUID } from "./uuid";
 
@@ -32,4 +33,5 @@ export {
   ContextMenu,
   CanvasSmoothPathEditor,
   getCommonStyles,
+  StampCreationInfo, CustomStampCreationInfo,
 };

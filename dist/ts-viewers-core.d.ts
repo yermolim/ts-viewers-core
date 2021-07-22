@@ -291,6 +291,16 @@ export declare class LinkedList<T> {
 	findIndex(value: T, comparator?: (a: T, b: T) => boolean): number;
 	[Symbol.iterator](): Generator<T, void, unknown>;
 }
+export interface StampCreationInfo {
+	subject: string;
+	bbox: Quadruple;
+	rect?: Quadruple;
+}
+export interface CustomStampCreationInfo extends StampCreationInfo {
+	imageData: number[];
+	type: string;
+	name: string;
+}
 export declare class UUID {
 	static getRandomUuid(): string;
 }
