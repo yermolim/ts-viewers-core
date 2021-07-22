@@ -7,11 +7,8 @@ export interface SvgSmoothPathData extends SmoothPathData {
 }
 
 export interface SvgSmoothPathOptions extends SmoothPathOptions {
-  /**smoothing filter position buffer (higher values mean smoother lines but less performance) */
-  bufferSize?: number; 
   strokeWidth?: number;  
   color?: Quadruple;
-  id?: number;
 }
 
 export class SvgSmoothPath extends SmoothPath {

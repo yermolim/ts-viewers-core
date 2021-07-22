@@ -112,11 +112,14 @@ export interface SmoothPathData {
 export interface SmoothPathOptions {
 	bufferSize?: number;
 	id?: number;
+	uuid?: string;
 }
 export declare abstract class SmoothPath {
 	private static readonly _defaultBufferSize;
 	protected readonly _id: number;
 	get id(): number;
+	protected readonly _uuid: string;
+	get uuid(): string;
 	protected readonly _bufferSize: number;
 	get bufferSize(): number;
 	protected _currentPath: SmoothPathData;
@@ -220,10 +223,8 @@ export interface SvgSmoothPathData extends SmoothPathData {
 	path: SVGPathElement;
 }
 export interface SvgSmoothPathOptions extends SmoothPathOptions {
-	bufferSize?: number;
 	strokeWidth?: number;
 	color?: Quadruple;
-	id?: number;
 }
 export declare class SvgSmoothPath extends SmoothPath {
 	private static readonly _defaultStrokeWidth;

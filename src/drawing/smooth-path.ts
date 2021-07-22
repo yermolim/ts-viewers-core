@@ -8,6 +8,7 @@ export interface SmoothPathOptions {
   /**smoothing filter position buffer (higher values mean smoother lines but less performance) */
   bufferSize?: number;
   id?: number;
+  uuid?: string;
 }
 
 /**a class used for drawing smooth SVG paths */
@@ -18,6 +19,11 @@ export abstract class SmoothPath {
   get id(): number {
     return this._id;
   }
+  protected readonly _uuid: string;
+  get uuid(): string {
+    return this._uuid;
+  }
+
   protected readonly _bufferSize: number;
   get bufferSize(): number {
     return this._bufferSize;
@@ -38,6 +44,7 @@ export abstract class SmoothPath {
   constructor(options?: SmoothPathOptions) {
     this._bufferSize = options?.bufferSize || SmoothPath._defaultBufferSize;
     this._id = options?.id;
+    this._uuid = options?.uuid;
   }
 
   endPath() {    

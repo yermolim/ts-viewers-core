@@ -353,9 +353,13 @@ class SmoothPath {
         this._positionBuffer = [];
         this._bufferSize = (options === null || options === void 0 ? void 0 : options.bufferSize) || SmoothPath._defaultBufferSize;
         this._id = options === null || options === void 0 ? void 0 : options.id;
+        this._uuid = options === null || options === void 0 ? void 0 : options.uuid;
     }
     get id() {
         return this._id;
+    }
+    get uuid() {
+        return this._uuid;
     }
     get bufferSize() {
         return this._bufferSize;
