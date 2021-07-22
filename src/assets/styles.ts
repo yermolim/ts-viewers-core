@@ -19,7 +19,7 @@ export const styles = /*html*/`
   }
 
   .disabled {
-    pointer-events: none;
+    pointer-events: none !important;
   }
 
   .relative {
@@ -376,6 +376,7 @@ export const styles = /*html*/`
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
+    overflow-x: hidden;
     overflow-y: auto;
     left: 0;
     top: 50px;
