@@ -1,5 +1,5 @@
 import { ByteUtils } from "./byte-utils";
 import { DomUtils } from "./dom-utils";
-import { getRandomUuid } from "./uuid";
+import { UUID } from "./uuid";
 
-export { ByteUtils, DomUtils, getRandomUuid };
+export { ByteUtils, DomUtils, UUID };

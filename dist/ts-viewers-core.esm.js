@@ -211,8 +211,10 @@ class DomUtils {
     }
 }
 
-function getRandomUuid() {
-    return v4();
+class UUID {
+    static getRandomUuid() {
+        return v4();
+    }
 }
 
-export { ByteUtils, DomUtils, getRandomUuid };
+export { ByteUtils, DomUtils, UUID };
