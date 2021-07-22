@@ -82,12 +82,6 @@ export class CustomStampEvent extends CustomEvent<CustomStampEventDetail> {
     super(customStampEvent, {detail});
   }
 }
-
-declare global {
-  interface HTMLElementEventMap {
-    [customStampEvent]: CustomStampEvent;
-  }
-}
 //#endregion
 
 /**
