@@ -23,6 +23,49 @@ export declare class DomUtils {
 	static downloadFile(blob: Blob, name?: string): void;
 	static loadImageAsync(url: string, revoke?: boolean): Promise<HTMLImageElement>;
 }
+export declare type ListenerLike = (this: HTMLElement, e: any) => any;
+export declare class EventService {
+	private _element;
+	get element(): HTMLElement;
+	private readonly _eventMap;
+	constructor(container: HTMLElement);
+	destroy(): void;
+	addListener<K extends keyof HTMLElementEventMap>(key: K, listener: (this: HTMLElement, e: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+	removeListener(key: keyof HTMLElementEventMap, listener: ListenerLike): void;
+	removeAllListenersForKey(key: keyof HTMLElementEventMap): void;
+	removeAllListeners(): void;
+	getListenersByKey(key: keyof HTMLElementEventMap): ListenerLike[];
+	hasListenersForKey(key: keyof HTMLElementEventMap): boolean;
+	dispatchEvent<K extends keyof HTMLElementEventMap>(e: HTMLElementEventMap[K]): void;
+}
+export declare type Double = readonly [
+	x: number,
+	y: number
+];
+export declare type Quadruple = readonly [
+	x1: number,
+	y1: number,
+	x2: number,
+	y2: number
+];
+export declare type Hextuple = readonly [
+	a: number,
+	b: number,
+	d: number,
+	e: number,
+	g: number,
+	h: number
+];
+export declare type Octuple = readonly [
+	x1: number,
+	y1: number,
+	x2: number,
+	y2: number,
+	x3: number,
+	y3: number,
+	x4: number,
+	y4: number
+];
 export declare class UUID {
 	static getRandomUuid(): string;
 }

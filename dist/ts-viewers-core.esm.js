@@ -211,10 +211,93 @@ class DomUtils {
     }
 }
 
+class EventService {
+    constructor(container) {
+        this._eventMap = new Map();
+        if (!container) {
+            throw new Error("Container is not defined");
+        }
+        const element = document.createElement("div");
+        element.style.position = "absolute";
+        element.style.width = "0";
+        element.style.height = "0";
+        element.style.zIndex = "-1000";
+        container.append(element);
+        this._element = element;
+    }
+    get element() {
+        return this._element;
+    }
+    destroy() {
+        this.removeAllListeners();
+        this._element.remove();
+        this._element = null;
+    }
+    addListener(key, listener, options) {
+        if (!this._element) {
+            return;
+        }
+        this._element.addEventListener(key, listener, options);
+        if (this._eventMap.has(key)) {
+            this._eventMap.get(key).add(listener);
+        }
+        else {
+            this._eventMap.set(key, new Set().add(listener));
+        }
+    }
+    removeListener(key, listener) {
+        if (!this._element) {
+            return;
+        }
+        this._element.removeEventListener(key, listener);
+        if (this._eventMap.has(key)) {
+            this._eventMap.get(key).delete(listener);
+        }
+    }
+    removeAllListenersForKey(key) {
+        if (!this._element) {
+            return;
+        }
+        if (this._eventMap.has(key)) {
+            const listeners = this._eventMap.get(key);
+            listeners.forEach(x => this._element.removeEventListener(key, x));
+            this._eventMap.delete(key);
+        }
+    }
+    removeAllListeners() {
+        if (!this._element) {
+            return;
+        }
+        this._eventMap.forEach((v, k) => {
+            v.forEach(x => this._element.removeEventListener(k, x));
+        });
+        this._eventMap.clear();
+    }
+    getListenersByKey(key) {
+        const listenerSet = this._eventMap.get(key);
+        return listenerSet
+            ? [...listenerSet]
+            : [];
+    }
+    hasListenersForKey(key) {
+        const listenerSet = this._eventMap.get(key);
+        return !!(listenerSet === null || listenerSet === void 0 ? void 0 : listenerSet.size);
+    }
+    dispatchEvent(e) {
+        if (!this._element) {
+            return;
+        }
+        if (!this.hasListenersForKey(e.type)) {
+            return;
+        }
+        this._element.dispatchEvent(e);
+    }
+}
+
 class UUID {
     static getRandomUuid() {
         return v4();
     }
 }
 
-export { ByteUtils, DomUtils, UUID };
+export { ByteUtils, DomUtils, EventService, UUID };
