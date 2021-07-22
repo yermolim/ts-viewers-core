@@ -1,19 +1,21 @@
 /// <reference path="./assets.d.ts" />
 
+const appName = "tspdf";
+
 export const styles = /*html*/`
 <style>
   :host {
-    --tspdf-color-primary-final: var(--tspdf-color-primary, rgba(40,40,40,1));
-    --tspdf-color-primary-tr-final: var(--tspdf-color-primary-tr, rgba(40,40,40,0.9));
-    --tspdf-color-secondary-final: var(--tspdf-color-secondary, rgba(60,60,60,1));
-    --tspdf-color-secondary-tr-final: var(--tspdf-color-secondary-tr, rgba(60,60,60,0.9));
-    --tspdf-color-accent-final: var(--tspdf-color-accent, rgba(96,96,96,1));
-    --tspdf-color-shadow-final: var(--tspdf-color-shadow, rgba(0,0,0,0.75));
-    --tspdf-color-bg-final: var(--tspdf-color-bg, rgba(128,128,128,1));
-    --tspdf-color-fg-primary-final: var(--tspdf-color-fg-primary, rgba(255,255,255,1));
-    --tspdf-color-fg-secondary-final: var(--tspdf-color-fg-secondary, rgba(187,187,187,1));
-    --tspdf-color-fg-accent-final: var(--tspdf-color-fg-accent, rgba(255,204,0,1));
-    --tspdf-color-text-selection-final: var(--tspdf-color-text-selection, rgba(104,104,128,0.3));
+    --${appName}-color-primary-final: var(--${appName}-color-primary, rgba(40,40,40,1));
+    --${appName}-color-primary-tr-final: var(--${appName}-color-primary-tr, rgba(40,40,40,0.9));
+    --${appName}-color-secondary-final: var(--${appName}-color-secondary, rgba(60,60,60,1));
+    --${appName}-color-secondary-tr-final: var(--${appName}-color-secondary-tr, rgba(60,60,60,0.9));
+    --${appName}-color-accent-final: var(--${appName}-color-accent, rgba(96,96,96,1));
+    --${appName}-color-shadow-final: var(--${appName}-color-shadow, rgba(0,0,0,0.75));
+    --${appName}-color-bg-final: var(--${appName}-color-bg, rgba(128,128,128,1));
+    --${appName}-color-fg-primary-final: var(--${appName}-color-fg-primary, rgba(255,255,255,1));
+    --${appName}-color-fg-secondary-final: var(--${appName}-color-fg-secondary, rgba(187,187,187,1));
+    --${appName}-color-fg-accent-final: var(--${appName}-color-fg-accent, rgba(255,204,0,1));
+    --${appName}-color-text-selection-final: var(--${appName}-color-text-selection, rgba(104,104,128,0.3));
   }
 
   .disabled {
@@ -74,7 +76,7 @@ export const styles = /*html*/`
     align-items: stretch;
     width: 100%;
     height: 100%;
-    background: var(--tspdf-color-bg-final);
+    background: var(--${appName}-color-bg-final);
   }
 
   #top-panel {
@@ -86,8 +88,8 @@ export const styles = /*html*/`
     flex-shrink: 0;
     width: 100%;
     height: 50px;
-    background: var(--tspdf-color-primary-final);
-    box-shadow: 0 0 10px var(--tspdf-color-shadow-final);
+    background: var(--${appName}-color-primary-final);
+    box-shadow: 0 0 10px var(--${appName}-color-shadow-final);
     z-index: 4;
     transition: height 0.25s ease-out 0.1s;
   }
@@ -108,8 +110,8 @@ export const styles = /*html*/`
     bottom: 20px;
     width: 400px;
     height: 50px;  
-    background: var(--tspdf-color-primary-tr-final);
-    box-shadow: 0 0 10px var(--tspdf-color-shadow-final);
+    background: var(--${appName}-color-primary-tr-final);
+    box-shadow: 0 0 10px var(--${appName}-color-shadow-final);
     z-index: 4;
     transition: height 0.25s ease-out, bottom 0.1s linear 0.25s;
   }
@@ -143,8 +145,8 @@ export const styles = /*html*/`
     height: 84px; 
     padding: 18px;
     border-radius: 18px;
-    background: var(--tspdf-color-secondary-tr-final);
-    box-shadow: 0 0 10px var(--tspdf-color-shadow-final);
+    background: var(--${appName}-color-secondary-tr-final);
+    box-shadow: 0 0 10px var(--${appName}-color-shadow-final);
     opacity: 0;
     transform: scale(0);
     transition: opacity 0.1s ease-in, transform 0s linear 0.1s;
@@ -166,9 +168,8 @@ export const styles = /*html*/`
     line-height: 16px;
     font-size: 12px;
     font-family: sans-serif;
-    color: var(--tspdf-color-fg-primary-final);
+    color: var(--${appName}-color-fg-primary-final);
   }
-  
   
   #annotation-panel,
   #command-panel {
@@ -209,8 +210,8 @@ export const styles = /*html*/`
     margin: 3px;
     cursor: default;      
     opacity: 0;
-    background: var(--tspdf-color-primary-tr-final);
-    box-shadow: 0 0 10px var(--tspdf-color-shadow-final);
+    background: var(--${appName}-color-primary-tr-final);
+    box-shadow: 0 0 10px var(--${appName}-color-shadow-final);
     transform: scale(0);
     transition: opacity 0.1s ease-in, transform 0s linear 0.1s;
     pointer-events: all;
@@ -225,13 +226,13 @@ export const styles = /*html*/`
   .annotation-panel-subitem,
   .command-panel-subitem {
     margin: 3px;    
-    background: var(--tspdf-color-secondary-tr-final);
-    box-shadow: 0 0 10px var(--tspdf-color-shadow-final);
+    background: var(--${appName}-color-secondary-tr-final);
+    box-shadow: 0 0 10px var(--${appName}-color-shadow-final);
     pointer-events: all;
   }    
   .command-panel-subitem.accent:hover,
   .command-panel-subitem.accent.on {
-    box-shadow: 0 0 10px var(--tspdf-color-fg-accent-final);
+    box-shadow: 0 0 10px var(--${appName}-color-fg-accent-final);
   }
   :not(.undoable-commands) #button-command-undo,
   :not(.annotation-selected) #button-annotation-edit-text,
@@ -277,7 +278,7 @@ export const styles = /*html*/`
   .panel-v-separator {
     width: 1px;
     height: 30px;
-    background-color: var(--tspdf-color-fg-secondary-final);
+    background-color: var(--${appName}-color-fg-secondary-final);
   }
 
   .panel-button {
@@ -295,30 +296,30 @@ export const styles = /*html*/`
   }
   .panel-button:hover,
   .panel-button.on {
-    background-color: var(--tspdf-color-accent-final);
+    background-color: var(--${appName}-color-accent-final);
   }
   .panel-button.accent,
   .panel-button.accent:hover,
   .panel-button.accent.on {
-    background-color: var(--tspdf-color-fg-accent-final);
+    background-color: var(--${appName}-color-fg-accent-final);
   }
   .panel-button img {
     width: 20px;
     height: 20px;
-    filter: invert() opacity(0.7) drop-shadow(0 0 0 var(--tspdf-color-fg-primary-final)) saturate(1000%);
+    filter: invert() opacity(0.7) drop-shadow(0 0 0 var(--${appName}-color-fg-primary-final)) saturate(1000%);
   }  
   .panel-button:hover img,
   .panel-button.on img {
-    filter: invert() opacity(0.7) drop-shadow(0 0 0 var(--tspdf-color-fg-accent-final)) saturate(1000%);
+    filter: invert() opacity(0.7) drop-shadow(0 0 0 var(--${appName}-color-fg-accent-final)) saturate(1000%);
   }  
   .panel-button.accent img,  
   .panel-button.accent:hover img,
   .panel-button.accent.on img {
-    filter: opacity(0.7) drop-shadow(0 0 0 var(--tspdf-color-primary-final)) saturate(1000%);
+    filter: opacity(0.7) drop-shadow(0 0 0 var(--${appName}-color-primary-final)) saturate(1000%);
   }
   .disabled .panel-button img,
   .panel-button.disabled img {
-    filter: invert() opacity(0.2) drop-shadow(0 0 0 var(--tspdf-color-fg-primary-final)) saturate(1000%);
+    filter: invert() opacity(0.2) drop-shadow(0 0 0 var(--${appName}-color-fg-primary-final)) saturate(1000%);
   }  
   .context-menu-content .panel-button {
     margin: 1px;
@@ -347,7 +348,7 @@ export const styles = /*html*/`
     user-select: none;
     font-family: sans-serif;
     font-size: 16px;
-    color: var(--tspdf-color-fg-primary-final);
+    color: var(--${appName}-color-fg-primary-final);
   }
   #paginator-input {
     text-align: center; 
@@ -358,8 +359,8 @@ export const styles = /*html*/`
     padding: 0;
     outline: none;
     border: none;
-    color: var(--tspdf-color-fg-primary-final);
-    background-color: var(--tspdf-color-primary-final);
+    color: var(--${appName}-color-fg-primary-final);
+    background-color: var(--${appName}-color-primary-final);
   }
   #paginator-total {
     margin: 4px;
@@ -381,8 +382,8 @@ export const styles = /*html*/`
     bottom: 0;
     width: 160px; 
     padding-top: 0px;
-    background: var(--tspdf-color-secondary-final);
-    box-shadow: 0 0 10px var(--tspdf-color-shadow-final);
+    background: var(--${appName}-color-secondary-final);
+    box-shadow: 0 0 10px var(--${appName}-color-shadow-final);
     z-index: 3;
     transition: padding-top 0.25s ease-out 0.1s, top 0.25s ease-out 0.1s, width 0.25s ease-out;
   } 
@@ -392,7 +393,7 @@ export const styles = /*html*/`
     transition: padding-top 0.25s ease-in 0.2s, top 0.25s ease-in 0.2s;
   }   
   .mobile #previewer {
-    background: var(--tspdf-color-secondary-tr-final);
+    background: var(--${appName}-color-secondary-tr-final);
   } 
   .hide-previewer #previewer {
     width: 0;
@@ -483,7 +484,7 @@ export const styles = /*html*/`
     flex-shrink: 0;
     margin: 10px auto;
     background-color: white;
-    box-shadow: 0 0 10px var(--tspdf-color-shadow-final);
+    box-shadow: 0 0 10px var(--${appName}-color-shadow-final);
   }
   .page {    
     position: absolute;
@@ -508,7 +509,7 @@ export const styles = /*html*/`
   }
   .page-preview:hover,
   .page-preview.current {
-    border-color: var(--tspdf-color-accent-final);
+    border-color: var(--${appName}-color-accent-final);
   }
   .page-preview::after {
     display: inline-block;
@@ -519,7 +520,7 @@ export const styles = /*html*/`
     font-family: sans-serif;
     font-size: 14px;
     line-height: 1;
-    color: var(--tspdf-color-fg-primary-final);
+    color: var(--${appName}-color-fg-primary-final);
     content: attr(data-page-number) " ";
   }
 
@@ -546,7 +547,7 @@ export const styles = /*html*/`
     transform-origin: 0% 0%;
   }
   .page-text ::selection {
-    background: var(--tspdf-color-text-selection-final);
+    background: var(--${appName}-color-text-selection-final);
   }
   .mode-hand .page-text span {
     cursor: grab;
@@ -604,7 +605,7 @@ export const styles = /*html*/`
     top: 0;
     width: 100%;
     height: 100%;
-    background: var(--tspdf-color-secondary-tr-final);
+    background: var(--${appName}-color-secondary-tr-final);
     touch-action: none;
   }
   
@@ -614,7 +615,7 @@ export const styles = /*html*/`
     top: 0;
     width: 100%;
     height: 100%;
-    background: var(--tspdf-color-secondary-tr-final);
+    background: var(--${appName}-color-secondary-tr-final);
   }
 
   .password-dialog {
@@ -633,8 +634,8 @@ export const styles = /*html*/`
     top: calc(50% - 25px);
     width: 320px;
     height: 50px;
-    background: var(--tspdf-color-primary-tr-final);
-    box-shadow: 0 0 10px var(--tspdf-color-shadow-final);
+    background: var(--${appName}-color-primary-tr-final);
+    box-shadow: 0 0 10px var(--${appName}-color-shadow-final);
   }
   .password-dialog input {
     width: 220px;
@@ -643,13 +644,13 @@ export const styles = /*html*/`
     font-size: 16px;
     outline: none;
     border: none;
-    color: var(--tspdf-color-fg-primary-final);
-    background-color: var(--tspdf-color-primary-final);
+    color: var(--${appName}-color-fg-primary-final);
+    background-color: var(--${appName}-color-primary-final);
   }
   .password-dialog input::placeholder {
     font-size: 14px;
     font-style: italic;
-    color: var(--tspdf-color-fg-primary-final);
+    color: var(--${appName}-color-fg-primary-final);
   }
   .password-dialog .buttons {
     display: flex;
@@ -678,8 +679,8 @@ export const styles = /*html*/`
     width: 320px;
     height: 240px;
     padding: 5px;
-    background: var(--tspdf-color-primary-tr-final);
-    box-shadow: 0 0 10px var(--tspdf-color-shadow-final);
+    background: var(--${appName}-color-primary-tr-final);
+    box-shadow: 0 0 10px var(--${appName}-color-shadow-final);
   }
   .text-dialog textarea {
     height: 100%;
@@ -689,13 +690,13 @@ export const styles = /*html*/`
     resize: none;
     outline: none;
     border: none;
-    color: var(--tspdf-color-fg-primary-final);
-    background-color: var(--tspdf-color-primary-final);
+    color: var(--${appName}-color-fg-primary-final);
+    background-color: var(--${appName}-color-primary-final);
   }
   .text-dialog textarea::placeholder {
     font-size: 14px;
     font-style: italic;
-    color: var(--tspdf-color-fg-primary-final);
+    color: var(--${appName}-color-fg-primary-final);
   }
   .text-dialog .buttons {
     display: flex;
@@ -723,8 +724,8 @@ export const styles = /*html*/`
     height: 100%;
     max-width: 720px;
     max-height: 720px;
-    background: var(--tspdf-color-primary-tr-final);
-    box-shadow: 0 0 10px var(--tspdf-color-shadow-final);
+    background: var(--${appName}-color-primary-tr-final);
+    box-shadow: 0 0 10px var(--${appName}-color-shadow-final);
     transform-origin: center;
     transform: translate(-50%, -50%)
   }
@@ -752,13 +753,13 @@ export const styles = /*html*/`
     font-size: 16px;
     outline: none;
     border: none;
-    color: var(--tspdf-color-fg-primary-final);
-    background-color: var(--tspdf-color-primary-final);
+    color: var(--${appName}-color-fg-primary-final);
+    background-color: var(--${appName}-color-primary-final);
   }
   .stamp-dialog input::placeholder {
     font-size: 14px;
     font-style: italic;
-    color: var(--tspdf-color-fg-primary-final);
+    color: var(--${appName}-color-fg-primary-final);
   }
   .stamp-input-row {    
     display: flex;
@@ -775,7 +776,7 @@ export const styles = /*html*/`
     font-family: sans-serif; 
     font-size: 16px;
     white-space: nowrap;
-    color: var(--tspdf-color-fg-secondary-final);
+    color: var(--${appName}-color-fg-secondary-final);
   }
   
   .abs-ratio-canvas {
@@ -784,7 +785,7 @@ export const styles = /*html*/`
     width: 100%;
     height: auto;
     max-height: 100%;
-    border: 2px solid var(--tspdf-color-fg-secondary-final);
+    border: 2px solid var(--${appName}-color-fg-secondary-final);
   }
 
   .annotation-temp-copy {
@@ -819,10 +820,10 @@ export const styles = /*html*/`
     stroke-dasharray: 3 0;
   } 
   .mode-annotation .annotation-controls.selected .annotation-handle {
-    cursor: pointer;
     stroke-width: 16;
     stroke-linecap: round;
     vector-effect: non-scaling-stroke;
+    cursor: pointer;
   }
   .mode-annotation .annotation-controls.selected .annotation-handle.helper {
     stroke-width: 12;
@@ -840,6 +841,7 @@ export const styles = /*html*/`
   .mode-annotation .annotation-controls.selected .annotation-rotator {
     fill: none;
     cursor: pointer;
+    vector-effect: non-scaling-stroke;
   }
   .mode-annotation .annotation-controls.selected .annotation-rotator .circle {
     r: 25;
@@ -857,8 +859,8 @@ export const styles = /*html*/`
     min-height: 50px;
     max-height: 300px;
     padding: 5px;
-    background: var(--tspdf-color-secondary-tr-final);
-    box-shadow: 0 0 10px var(--tspdf-color-shadow-final);
+    background: var(--${appName}-color-secondary-tr-final);
+    box-shadow: 0 0 10px var(--${appName}-color-shadow-final);
     display: flex;
     flex-direction: column;
     justify-content: stretch;
@@ -884,7 +886,7 @@ export const styles = /*html*/`
     border-radius: 12px;
     border-width: 2px;
     border-style: solid;
-    border-color: var(--tspdf-color-fg-secondary-final);
+    border-color: var(--${appName}-color-fg-secondary-final);
   }
   .context-menu-stamp-select-button {
     box-sizing: border-box;
@@ -900,11 +902,11 @@ export const styles = /*html*/`
     border-radius: 5px;
     font-family: sans-serif;
     font-size: 16px;
-    color: var(--tspdf-color-fg-primary-final); 
+    color: var(--${appName}-color-fg-primary-final); 
   }
   .context-menu-stamp-select-button:hover,
   .context-menu-stamp-select-button.on {
-    background-color: var(--tspdf-color-accent-final);
+    background-color: var(--${appName}-color-accent-final);
   }
   .context-menu-slider {
     -webkit-appearance: none;
@@ -914,7 +916,7 @@ export const styles = /*html*/`
     height: 5px;
     border-radius: 5px;
     cursor: pointer;
-    background-color: var(--tspdf-color-fg-secondary-final);
+    background-color: var(--${appName}-color-fg-secondary-final);
   }
   .context-menu-slider::-webkit-slider-thumb {
     -webkit-appearance: none;
@@ -924,7 +926,7 @@ export const styles = /*html*/`
     height: 20px;
     border-radius: 10px;
     cursor: pointer;
-    background-color: var(--tspdf-color-accent-final);
+    background-color: var(--${appName}-color-accent-final);
   }
   .context-menu-slider::-moz-range-thumb {
     outline: none; 
@@ -932,14 +934,14 @@ export const styles = /*html*/`
     height: 20px;
     border-radius: 10px;
     cursor: pointer;
-    background-color: var(--tspdf-color-accent-final);
+    background-color: var(--${appName}-color-accent-final);
   }
 
   #button-open-file {
     pointer-events: auto !important;
   }
   .disabled #button-open-file img {
-    filter: invert() opacity(0.7) drop-shadow(0 0 0 var(--tspdf-color-fg-primary-final)) saturate(1000%);
+    filter: invert() opacity(0.7) drop-shadow(0 0 0 var(--${appName}-color-fg-primary-final)) saturate(1000%);
   }
 
   .loader {
@@ -961,15 +963,15 @@ export const styles = /*html*/`
   }
   .loader div:nth-child(1) {
     animation-name: loaderone;
-    background-color: var(--tspdf-color-accent-final);
+    background-color: var(--${appName}-color-accent-final);
   }
   .loader div:nth-child(2) {
     animation-name: loadertwo;
-    background-color: var(--tspdf-color-fg-primary-final);  
+    background-color: var(--${appName}-color-fg-primary-final);  
   }
   .loader div:nth-child(3) {  
     animation-name: loaderthree;
-    background-color: var(--tspdf-color-fg-secondary-final);  
+    background-color: var(--${appName}-color-fg-secondary-final);  
   }
 
   @keyframes loaderone {
