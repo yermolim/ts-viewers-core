@@ -57,6 +57,10 @@ export declare class Icons {
 		readonly note: `<img src="${any}"/>`;
 		readonly freeText: `<img src="${any}"/>`;
 		readonly freeTextCallout: `<img src="${any}"/>`;
+		readonly strikeout: `<img src="${any}"/>`;
+		readonly squiggly: `<img src="${any}"/>`;
+		readonly underline: `<img src="${any}"/>`;
+		readonly highlight: `<img src="${any}"/>`;
 	};
 	static readonly lineTypeIcons: {
 		readonly straight: `<img src="${any}"/>`;

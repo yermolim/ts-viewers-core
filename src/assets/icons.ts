@@ -100,6 +100,10 @@ export class Icons {
     note: `<img src="${Icons.icon_popup2}"/>`,
     freeText: `<img src="${Icons.icon_text_free}"/>`,
     freeTextCallout: `<img src="${Icons.icon_text_callout}"/>`,
+    strikeout: `<img src="${Icons.icon_text_strikeout}"/>`,
+    squiggly: `<img src="${Icons.icon_text_squiggly}"/>`,
+    underline: `<img src="${Icons.icon_text_underline}"/>`,
+    highlight: `<img src="${Icons.icon_text_highlight}"/>`,
   } as const;
 
   static readonly lineTypeIcons = {  
