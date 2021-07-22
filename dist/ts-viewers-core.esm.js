@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+import { Vec2, Mat3, getDistance2D } from 'mathador';
 import { v4 } from 'uuid';
 
 class ByteUtils {
@@ -208,6 +209,83 @@ class DomUtils {
             });
             return loadedImage;
         });
+    }
+}
+
+class CloudCurveData {
+    static buildFromPolyline(polylinePoints, maxArcSize) {
+        if (!polylinePoints || polylinePoints.length < 2) {
+            return null;
+        }
+        if (isNaN(maxArcSize) || maxArcSize <= 0) {
+            throw new Error(`Invalid maximal arc size ${maxArcSize}`);
+        }
+        const start = polylinePoints[0].clone().truncate(2);
+        const curves = [];
+        const zeroVec = new Vec2();
+        const lengthVec = new Vec2();
+        let i;
+        let j;
+        let lineStart;
+        let lineEnd;
+        let lineLength;
+        let arcCount;
+        let arcSize;
+        let halfArcSize;
+        let arcStart;
+        let arcEnd;
+        for (i = 0; i < polylinePoints.length - 1; i++) {
+            lineStart = polylinePoints[i];
+            lineEnd = polylinePoints[i + 1];
+            lineLength = Vec2.subtract(lineEnd, lineStart).getMagnitude();
+            if (!lineLength) {
+                continue;
+            }
+            lengthVec.set(lineLength, 0);
+            const matrix = Mat3.from4Vec2(zeroVec, lengthVec, lineStart, lineEnd);
+            arcCount = Math.ceil(lineLength / maxArcSize);
+            arcSize = lineLength / arcCount;
+            halfArcSize = arcSize / 2;
+            for (j = 0; j < arcCount; j++) {
+                arcStart = j * arcSize;
+                arcEnd = (j + 1) * arcSize;
+                const curve = [
+                    new Vec2(arcStart, -halfArcSize).applyMat3(matrix).truncate(2),
+                    new Vec2(arcEnd, -halfArcSize).applyMat3(matrix).truncate(2),
+                    new Vec2(arcEnd, 0).applyMat3(matrix).truncate(2),
+                ];
+                curves.push(curve);
+            }
+        }
+        return {
+            start,
+            curves,
+        };
+    }
+    static buildFromEllipse(rx, ry, maxArcSize, matrix) {
+        matrix || (matrix = new Mat3());
+        const center = new Vec2();
+        const ellipseCircumferenceApprox = Math.PI * (3 * (rx + ry) - Math.sqrt((3 * rx + ry) * (rx + 3 * ry)));
+        const segmentsNumber = Math.ceil(ellipseCircumferenceApprox / maxArcSize / 4) * 4;
+        const maxSegmentLength = Math.ceil(ellipseCircumferenceApprox / segmentsNumber);
+        const points = [];
+        const current = new Vec2(center.x + rx, center.y);
+        const next = new Vec2();
+        let angle = 0;
+        let distance;
+        points.push(current.clone().applyMat3(matrix).truncate(2));
+        for (let i = 0; i < segmentsNumber; i++) {
+            distance = 0;
+            while (distance < maxSegmentLength) {
+                angle += 0.25 / 180 * Math.PI;
+                next.set(rx * Math.cos(angle) + center.x, ry * Math.sin(angle) + center.y);
+                distance += getDistance2D(current.x, current.y, next.x, next.y);
+                current.setFromVec2(next);
+            }
+            points.push(current.clone().applyMat3(matrix).truncate(2));
+        }
+        const curveData = this.buildFromPolyline(points, maxArcSize);
+        return curveData;
     }
 }
 
@@ -458,4 +536,4 @@ class UUID {
     }
 }
 
-export { ByteUtils, DomUtils, EventService, LinkedList, LinkedListNode, UUID };
+export { ByteUtils, CloudCurveData, DomUtils, EventService, LinkedList, LinkedListNode, UUID };
