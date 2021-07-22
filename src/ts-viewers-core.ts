@@ -1,4 +1,5 @@
 import { Icons } from "./assets/icons";
+import { getCommonStyles } from "./assets/styles";
 import { ByteUtils } from "./byte-utils";
 import { CanvasSmoothPathEditor } from "./components/canvas-smooth-path-editor";
 import { ContextMenu } from "./components/context-menu";
@@ -30,4 +31,5 @@ export {
   Loader,
   ContextMenu,
   CanvasSmoothPathEditor,
+  getCommonStyles,
 };
