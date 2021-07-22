@@ -46,6 +46,7 @@ export declare class Icons {
 	static readonly icon_text_strikeout: any;
 	static readonly icon_text_underline: any;
 }
+export declare function getCommonStyles(appName: string): string;
 export declare class ByteUtils {
 	static parseIntFromBytes(bytes: Uint8Array): number;
 	static int8ToBytes(int: number): Uint8Array;
