@@ -16,5 +16,12 @@ export declare class ByteUtils {
 	static clearBit(n: number, bitPosition: number): number;
 	static updateBit(n: number, bitPosition: number, bitValue: boolean): number;
 }
+export declare class DomUtils {
+	static htmlToElements(html: string): HTMLElement[];
+	static promisify<T>(callback: () => T): Promise<T>;
+	static runEmptyTimeout(): Promise<void>;
+	static downloadFile(blob: Blob, name?: string): void;
+	static loadImageAsync(url: string, revoke?: boolean): Promise<HTMLImageElement>;
+}
 
 export {};

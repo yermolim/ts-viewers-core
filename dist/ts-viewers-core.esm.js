@@ -139,4 +139,74 @@ class ByteUtils {
     }
 }
 
-export { ByteUtils };
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+class DomUtils {
+    static htmlToElements(html) {
+        const template = document.createElement("template");
+        template.innerHTML = html;
+        const nodes = [];
+        template.content.childNodes.forEach(x => {
+            if (x instanceof HTMLElement) {
+                nodes.push(x);
+            }
+        });
+        return nodes;
+    }
+    static promisify(callback) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return new Promise(resolve => {
+                setTimeout(() => {
+                    const result = callback();
+                    resolve(result);
+                }, 0);
+            });
+        });
+    }
+    static runEmptyTimeout() {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.promisify(() => undefined);
+        });
+    }
+    static downloadFile(blob, name) {
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.setAttribute("download", name);
+        link.href = url;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 10000);
+    }
+    static loadImageAsync(url, revoke = false) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const loadedImage = yield new Promise((resolve, reject) => {
+                const image = new Image();
+                image.onerror = (e) => {
+                    if (revoke) {
+                        URL.revokeObjectURL(url);
+                    }
+                    console.log(`Error while loading image: ${e}`);
+                    resolve(null);
+                };
+                image.onload = () => {
+                    if (revoke) {
+                        URL.revokeObjectURL(url);
+                    }
+                    resolve(image);
+                };
+                image.src = url;
+            });
+            return loadedImage;
+        });
+    }
+}
+
+export { ByteUtils, DomUtils };
