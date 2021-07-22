@@ -38,6 +38,29 @@ export declare class EventService {
 	hasListenersForKey(key: keyof HTMLElementEventMap): boolean;
 	dispatchEvent<K extends keyof HTMLElementEventMap>(e: HTMLElementEventMap[K]): void;
 }
+export declare class LinkedListNode<T> {
+	data: T;
+	next: LinkedListNode<T>;
+	constructor(data: T);
+}
+export declare class LinkedList<T> {
+	private _head;
+	get head(): T;
+	private _length;
+	get length(): number;
+	get tail(): T;
+	constructor(head?: T);
+	push(value: T): void;
+	insert(value: T, n: number): T;
+	replace(value: T, n: number): T;
+	remove(n: number): T;
+	clear(): void;
+	get(n: number): T;
+	pop(): T;
+	has(value: T, comparator?: (a: T, b: T) => boolean): boolean;
+	findIndex(value: T, comparator?: (a: T, b: T) => boolean): number;
+	[Symbol.iterator](): Generator<T, void, unknown>;
+}
 export declare type Double = readonly [
 	x: number,
 	y: number

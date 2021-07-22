@@ -294,10 +294,168 @@ class EventService {
     }
 }
 
+class LinkedListNode {
+    constructor(data) {
+        this.data = data;
+    }
+}
+class LinkedList {
+    constructor(head) {
+        this._length = 0;
+        if (head) {
+            this.push(head);
+        }
+    }
+    get head() {
+        return this._head.data;
+    }
+    get length() {
+        return this._length;
+    }
+    get tail() {
+        return this.get(this._length - 1);
+    }
+    push(value) {
+        const node = new LinkedListNode(value);
+        let current;
+        if (!this._head) {
+            this._head = node;
+        }
+        else {
+            current = this._head;
+            while (current.next) {
+                current = current.next;
+            }
+            current.next = node;
+        }
+        this._length++;
+    }
+    insert(value, n) {
+        if (n < 0 || n > this._length - 1) {
+            return null;
+        }
+        const node = new LinkedListNode(value);
+        let previous;
+        let current = this._head;
+        let i = 0;
+        if (!n) {
+            this._head = node;
+        }
+        else {
+            while (i++ < n) {
+                previous = current;
+                current = current.next;
+            }
+            previous.next = node;
+        }
+        node.next = current;
+        this._length++;
+        return node.data;
+    }
+    replace(value, n) {
+        if (n < 0 || n > this._length - 1) {
+            return null;
+        }
+        const node = new LinkedListNode(value);
+        let previous;
+        let current = this._head;
+        let i = 0;
+        if (!n) {
+            this._head = node;
+        }
+        else {
+            while (i++ < n) {
+                previous = current;
+                current = current.next;
+            }
+            previous.next = node;
+        }
+        node.next = current.next;
+        return current.data;
+    }
+    remove(n) {
+        if (n < 0 || n > this._length - 1) {
+            return null;
+        }
+        let previous;
+        let current = this._head;
+        let i = 0;
+        if (!n) {
+            this._head = current.next;
+        }
+        else {
+            while (i++ < n) {
+                previous = current;
+                current = current.next;
+            }
+            previous.next = current.next;
+        }
+        this._length--;
+        return current.data;
+    }
+    clear() {
+        this._head = null;
+        this._length = 0;
+    }
+    get(n) {
+        if (n < 0 || n > this._length - 1) {
+            return null;
+        }
+        let current = this._head;
+        let i = 0;
+        while (i++ < n) {
+            current = current.next;
+        }
+        return current.data;
+    }
+    pop() {
+        return this.remove(this._length - 1);
+    }
+    has(value, comparator) {
+        if (!this._length) {
+            return false;
+        }
+        comparator || (comparator = (a, b) => a === b);
+        let current = this._head;
+        let i = 0;
+        while (i < this._length) {
+            if (comparator(value, current.data)) {
+                return true;
+            }
+            current = current.next;
+            i++;
+        }
+        return false;
+    }
+    findIndex(value, comparator) {
+        if (!this._length) {
+            return -1;
+        }
+        comparator || (comparator = (a, b) => a === b);
+        let current = this._head;
+        let i = 0;
+        while (i < this._length) {
+            if (comparator(value, current.data)) {
+                return i;
+            }
+            current = current.next;
+            i++;
+        }
+        return -1;
+    }
+    *[Symbol.iterator]() {
+        let current = this._head;
+        while (current) {
+            yield current.data;
+            current = current.next;
+        }
+    }
+}
+
 class UUID {
     static getRandomUuid() {
         return v4();
     }
 }
 
-export { ByteUtils, DomUtils, EventService, UUID };
+export { ByteUtils, DomUtils, EventService, LinkedList, LinkedListNode, UUID };
