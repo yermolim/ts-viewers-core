@@ -10,11 +10,13 @@ import { CloudCurveData } from "./drawing/clouds";
 import { SmoothPath, SmoothPathData, SmoothPathOptions } from "./drawing/smooth-path";
 import { SvgSmoothPath, SvgSmoothPathData, SvgSmoothPathOptions } from "./drawing/svg-smooth-path";
 import { SvgTempPath } from "./drawing/svg-temp-path";
-import { EventService, ListenerLike } from "./event-service";
+import { EventService, ListenerLike } from "./services/event-service";
 import { LinkedList, LinkedListNode } from "./linked-list";
 import { StampCreationInfo, CustomStampCreationInfo } from "./stamps";
 import { Double, Quadruple, Hextuple, Octuple } from "./tuple-types";
 import { UUID } from "./uuid";
+import { CustomStampService, customStampEvent, CustomStampEvent, 
+  CustomStampEventDetail } from "./services/custom-stamp-service";
 
 export { 
   ByteUtils, 
@@ -34,4 +36,5 @@ export {
   CanvasSmoothPathEditor,
   getCommonStyles,
   StampCreationInfo, CustomStampCreationInfo,
+  CustomStampService, customStampEvent, CustomStampEvent, CustomStampEventDetail,
 };

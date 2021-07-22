@@ -304,5 +304,32 @@ export interface CustomStampCreationInfo extends StampCreationInfo {
 export declare class UUID {
 	static getRandomUuid(): string;
 }
+export declare const customStampEvent: "tsviewer-customstampchange";
+export interface CustomStampEventDetail {
+	type: "add" | "delete";
+	stamp: CustomStampCreationInfo;
+}
+export declare class CustomStampEvent extends CustomEvent<CustomStampEventDetail> {
+	constructor(detail: CustomStampEventDetail);
+}
+export declare class CustomStampService {
+	private readonly _container;
+	private readonly _eventService;
+	private readonly _customStampsByType;
+	private readonly _fileInput;
+	private readonly _loader;
+	private _overlay;
+	constructor(container: HTMLElement, eventService: EventService);
+	destroy(): void;
+	importCustomStamps(stamps: CustomStampCreationInfo[]): void;
+	getCustomStamps(): CustomStampCreationInfo[];
+	addCustomStamp(stamp: CustomStampCreationInfo): void;
+	removeCustomStamp(type: string): void;
+	startLoadingImage(): void;
+	startDrawing(): void;
+	private onFileInput;
+	private openImageLoaderOverlayAsync;
+	private openDesignerOverlayAsync;
+}
 
 export {};

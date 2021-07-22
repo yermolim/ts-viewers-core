@@ -1688,7 +1688,7 @@ CanvasSmoothPathEditor._colors = [
     [1, 0.2, 1, 1],
 ];
 
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+var __awaiter$1 = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -1710,7 +1710,7 @@ class DomUtils {
         return nodes;
     }
     static promisify(callback) {
-        return __awaiter(this, void 0, void 0, function* () {
+        return __awaiter$1(this, void 0, void 0, function* () {
             return new Promise(resolve => {
                 setTimeout(() => {
                     const result = callback();
@@ -1720,7 +1720,7 @@ class DomUtils {
         });
     }
     static runEmptyTimeout() {
-        return __awaiter(this, void 0, void 0, function* () {
+        return __awaiter$1(this, void 0, void 0, function* () {
             yield this.promisify(() => undefined);
         });
     }
@@ -1735,7 +1735,7 @@ class DomUtils {
         setTimeout(() => URL.revokeObjectURL(url), 10000);
     }
     static loadImageAsync(url, revoke = false) {
-        return __awaiter(this, void 0, void 0, function* () {
+        return __awaiter$1(this, void 0, void 0, function* () {
             const loadedImage = yield new Promise((resolve, reject) => {
                 const image = new Image();
                 image.onerror = (e) => {
@@ -2201,4 +2201,332 @@ class UUID {
     }
 }
 
-export { ByteUtils, CanvasSmoothPathEditor, CloudCurveData, ContextMenu, DomUtils, EventService, Icons, LinkedList, LinkedListNode, Loader, SmoothPath, SvgSmoothPath, SvgTempPath, UUID, getCommonStyles };
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+const stampImageLoaderHtml = `
+  <div class="abs-full-size-overlay stamp-dialog">
+    <div class="form">
+      <div class="form-canvas-wrapper">
+        <canvas class="abs-ratio-canvas"></canvas>
+      </div>
+      <div class="stamp-input-row">
+        <p>Stamp name:</p>
+        <input class="stamp-name-input" type="text" maxlength="128"/>
+      </div>
+      <div class="stamp-input-row">
+        <p>Stamp description:</p>
+        <input class="stamp-subject-input" type="text" maxlength="256"/>
+      </div>
+      <div class="stamp-input-row">
+        <p>Width:</p>
+        <input class="stamp-width-input" type="text" maxlength="4"/>
+        <p>Height:</p>
+        <input class="stamp-height-input" type="text" maxlength="4"/>
+      </div>
+      <div class="buttons">
+        <div class="panel-button stamp-ok">
+          <img src="${Icons.icon_ok}"/>
+        </div>
+        <div class="panel-button stamp-cancel">
+          <img src="${Icons.icon_close}"/>
+        </div>
+      </div>
+    </div>
+  </div>
+`;
+const stampDesignerHtml = `
+  <div class="abs-full-size-overlay stamp-dialog">
+    <div class="form">
+      <div class="form-canvas-wrapper">
+      </div>
+      <div class="stamp-input-row">
+        <p>Stamp name:</p>
+        <input class="stamp-name-input" type="text" maxlength="128"/>
+      </div>
+      <div class="stamp-input-row">
+        <p>Stamp description:</p>
+        <input class="stamp-subject-input" type="text" maxlength="256"/>
+      </div>
+      <div class="stamp-input-row">
+        <p>Width:</p>
+        <input class="stamp-width-input" type="text" maxlength="4"/>
+        <p>Height:</p>
+        <input class="stamp-height-input" type="text" maxlength="4"/>
+      </div>
+      <div class="buttons">
+        <div class="panel-button stamp-ok">
+          <img src="${Icons.icon_ok}"/>
+        </div>
+        <div class="panel-button stamp-cancel">
+          <img src="${Icons.icon_close}"/>
+        </div>
+      </div>
+    </div>
+  </div>
+`;
+const customStampEvent = "tsviewer-customstampchange";
+class CustomStampEvent extends CustomEvent {
+    constructor(detail) {
+        super(customStampEvent, { detail });
+    }
+}
+class CustomStampService {
+    constructor(container, eventService) {
+        this._customStampsByType = new Map();
+        this._loader = new Loader();
+        this.onFileInput = () => {
+            const files = this._fileInput.files;
+            if (files.length === 0) {
+                return;
+            }
+            this.openImageLoaderOverlayAsync(files[0]);
+            this._fileInput.value = null;
+        };
+        if (!container) {
+            throw new Error("Container is not defined");
+        }
+        if (!eventService) {
+            throw new Error("Event service is not defined");
+        }
+        this._container = container;
+        this._eventService = eventService;
+        const fileInput = document.createElement("input");
+        fileInput.type = "file";
+        fileInput.accept = "image/*";
+        fileInput.classList.add("abs-hidden");
+        this._fileInput = fileInput;
+        this._fileInput.addEventListener("change", this.onFileInput);
+        this._container.append(this._fileInput);
+    }
+    destroy() {
+        var _a;
+        this._fileInput.remove();
+        this._loader.hide();
+        (_a = this._overlay) === null || _a === void 0 ? void 0 : _a.remove();
+    }
+    importCustomStamps(stamps) {
+        if (stamps === null || stamps === void 0 ? void 0 : stamps.length) {
+            stamps.forEach(x => {
+                this._customStampsByType.set(x.type, x);
+            });
+        }
+    }
+    getCustomStamps() {
+        return [...this._customStampsByType.values()];
+    }
+    addCustomStamp(stamp) {
+        this._customStampsByType.set(stamp.type, stamp);
+        this._eventService.dispatchEvent(new CustomStampEvent({
+            type: "add",
+            stamp: stamp,
+        }));
+    }
+    removeCustomStamp(type) {
+        const stamp = this._customStampsByType.get(type);
+        if (!stamp) {
+            return;
+        }
+        this._customStampsByType.delete(type);
+        this._eventService.dispatchEvent(new CustomStampEvent({
+            type: "delete",
+            stamp: stamp,
+        }));
+    }
+    startLoadingImage() {
+        this._fileInput.click();
+    }
+    startDrawing() {
+        this.openDesignerOverlayAsync();
+    }
+    openImageLoaderOverlayAsync(file) {
+        return __awaiter(this, void 0, void 0, function* () {
+            this._loader.show(this._container, 10);
+            const imagePromise = new Promise((resolve, reject) => {
+                const url = URL.createObjectURL(file);
+                const img = new Image();
+                img.onload = () => {
+                    URL.revokeObjectURL(url);
+                    resolve(img);
+                };
+                img.onerror = (e) => {
+                    console.log(e);
+                    reject();
+                };
+                img.src = url;
+            });
+            let image;
+            try {
+                image = yield imagePromise;
+            }
+            catch (_a) {
+                this._loader.hide();
+                return;
+            }
+            const imageWidth = image.width;
+            const imageHeight = image.height;
+            const imageRatio = image.width / image.height;
+            const overlay = DomUtils.htmlToElements(stampImageLoaderHtml)[0];
+            const canvas = overlay.querySelector("canvas");
+            const cancelButton = overlay.querySelector(".stamp-cancel");
+            const okButton = overlay.querySelector(".stamp-ok");
+            const nameInput = overlay.querySelector(".stamp-name-input");
+            const subjectInput = overlay.querySelector(".stamp-subject-input");
+            const widthInput = overlay.querySelector(".stamp-width-input");
+            const heightInput = overlay.querySelector(".stamp-height-input");
+            let stampName = "Custom stamp";
+            let stampSubject = "image stamp";
+            let stampWidth = 64;
+            let stampHeight = +(64 / imageRatio).toFixed();
+            nameInput.value = stampName;
+            widthInput.value = stampWidth + "";
+            heightInput.value = stampHeight + "";
+            this._overlay = overlay;
+            this._container.append(overlay);
+            canvas.width = imageWidth;
+            canvas.height = imageHeight;
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(image, 0, 0);
+            const imgData = ctx.getImageData(0, 0, image.width, image.height).data;
+            const validate = () => {
+                if (!stampName
+                    || (!stampHeight || isNaN(stampHeight))
+                    || (!stampWidth || isNaN(stampWidth))) {
+                    okButton.classList.add("disabled");
+                }
+                else {
+                    okButton.classList.remove("disabled");
+                }
+            };
+            nameInput.addEventListener("input", () => {
+                stampName = nameInput.value;
+                validate();
+            });
+            subjectInput.addEventListener("input", () => {
+                stampSubject = subjectInput.value;
+                validate();
+            });
+            widthInput.addEventListener("input", () => {
+                var _a;
+                stampWidth = +((_a = (+widthInput.value)) === null || _a === void 0 ? void 0 : _a.toFixed());
+                validate();
+            });
+            heightInput.addEventListener("input", () => {
+                var _a;
+                stampHeight = +((_a = (+heightInput.value)) === null || _a === void 0 ? void 0 : _a.toFixed());
+                validate();
+            });
+            const hide = () => {
+                overlay.remove();
+                this._overlay = null;
+            };
+            cancelButton.addEventListener("click", hide);
+            okButton.addEventListener("click", () => {
+                const imageDataArray = new Array(imgData.length);
+                for (let i = 0; i < imgData.length; i++) {
+                    imageDataArray[i] = imgData[i];
+                }
+                const stamp = {
+                    type: "/" + UUID.getRandomUuid(),
+                    name: stampName,
+                    subject: stampSubject,
+                    rect: [0, 0, stampWidth, stampHeight],
+                    bbox: [0, 0, imageWidth, imageHeight],
+                    imageData: imageDataArray,
+                };
+                this.addCustomStamp(stamp);
+                hide();
+            });
+            this._loader.hide();
+        });
+    }
+    openDesignerOverlayAsync() {
+        return __awaiter(this, void 0, void 0, function* () {
+            this._loader.show(this._container, 10);
+            const overlay = DomUtils.htmlToElements(stampDesignerHtml)[0];
+            const canvasContainer = overlay.querySelector(".form-canvas-wrapper");
+            const cancelButton = overlay.querySelector(".stamp-cancel");
+            const okButton = overlay.querySelector(".stamp-ok");
+            const nameInput = overlay.querySelector(".stamp-name-input");
+            const subjectInput = overlay.querySelector(".stamp-subject-input");
+            const widthInput = overlay.querySelector(".stamp-width-input");
+            const heightInput = overlay.querySelector(".stamp-height-input");
+            let stampName = "Custom stamp";
+            let stampSubject = "drawing stamp";
+            let stampWidth = 64;
+            let stampHeight = 64;
+            nameInput.value = stampName;
+            widthInput.value = stampWidth + "";
+            heightInput.value = stampHeight + "";
+            const editor = new CanvasSmoothPathEditor(canvasContainer, {
+                canvasWidth: stampWidth,
+                canvasHeight: stampHeight,
+            });
+            this._overlay = overlay;
+            this._container.append(overlay);
+            const updateCanvasSize = () => {
+                editor.canvasSize = [stampWidth, stampHeight];
+            };
+            const validate = () => {
+                if (!stampName
+                    || (!stampHeight || isNaN(stampHeight))
+                    || (!stampWidth || isNaN(stampWidth))) {
+                    okButton.classList.add("disabled");
+                }
+                else {
+                    updateCanvasSize();
+                    okButton.classList.remove("disabled");
+                }
+            };
+            nameInput.addEventListener("input", () => {
+                stampName = nameInput.value;
+                validate();
+            });
+            subjectInput.addEventListener("input", () => {
+                stampSubject = subjectInput.value;
+                validate();
+            });
+            widthInput.addEventListener("input", () => {
+                var _a;
+                stampWidth = +((_a = (+widthInput.value)) === null || _a === void 0 ? void 0 : _a.toFixed());
+                validate();
+            });
+            heightInput.addEventListener("input", () => {
+                var _a;
+                stampHeight = +((_a = (+heightInput.value)) === null || _a === void 0 ? void 0 : _a.toFixed());
+                validate();
+            });
+            const hide = () => {
+                overlay.remove();
+                this._overlay = null;
+            };
+            cancelButton.addEventListener("click", hide);
+            okButton.addEventListener("click", () => {
+                const imgData = editor.getImageData();
+                const imageDataArray = new Array(imgData.length);
+                for (let i = 0; i < imgData.length; i++) {
+                    imageDataArray[i] = imgData[i];
+                }
+                const stamp = {
+                    type: "/" + UUID.getRandomUuid(),
+                    name: stampName,
+                    subject: stampSubject,
+                    rect: [0, 0, stampWidth, stampHeight],
+                    bbox: [0, 0, stampWidth, stampHeight],
+                    imageData: imageDataArray,
+                };
+                this.addCustomStamp(stamp);
+                hide();
+            });
+            this._loader.hide();
+        });
+    }
+}
+
+export { ByteUtils, CanvasSmoothPathEditor, CloudCurveData, ContextMenu, CustomStampEvent, CustomStampService, DomUtils, EventService, Icons, LinkedList, LinkedListNode, Loader, SmoothPath, SvgSmoothPath, SvgTempPath, UUID, customStampEvent, getCommonStyles };
