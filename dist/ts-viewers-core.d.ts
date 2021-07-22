@@ -2,6 +2,50 @@
 
 import { Mat3, Vec2 } from 'mathador';
 
+export declare class Icons {
+	readonly icon_arrow: any;
+	readonly icon_arrow_up: any;
+	readonly icon_arrow_down: any;
+	readonly icon_arrow_left: any;
+	readonly icon_arrow_right: any;
+	readonly icon_back: any;
+	readonly icon_caret: any;
+	readonly icon_circle: any;
+	readonly icon_clockwise: any;
+	readonly icon_counter_clockwise: any;
+	readonly icon_close: any;
+	readonly icon_close2: any;
+	readonly icon_cloudy: any;
+	readonly icon_delete: any;
+	readonly icon_download: any;
+	readonly icon_fit_page: any;
+	readonly icon_fit_viewer: any;
+	readonly icon_geometric: any;
+	readonly icon_hand: any;
+	readonly icon_line: any;
+	readonly icon_load: any;
+	readonly icon_minus: any;
+	readonly icon_ok: any;
+	readonly icon_pen: any;
+	readonly icon_plus: any;
+	readonly icon_pointer: any;
+	readonly icon_polygon: any;
+	readonly icon_polyline: any;
+	readonly icon_popup: any;
+	readonly icon_popup2: any;
+	readonly icon_sidebar: any;
+	readonly icon_square: any;
+	readonly icon_stamp: any;
+	readonly icon_straight: any;
+	readonly icon_text: any;
+	readonly icon_text2: any;
+	readonly icon_text_free: any;
+	readonly icon_text_callout: any;
+	readonly icon_text_highlight: any;
+	readonly icon_text_squiggly: any;
+	readonly icon_text_strikeout: any;
+	readonly icon_text_underline: any;
+}
 export declare class ByteUtils {
 	static parseIntFromBytes(bytes: Uint8Array): number;
 	static int8ToBytes(int: number): Uint8Array;

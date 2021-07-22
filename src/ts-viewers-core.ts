@@ -1,3 +1,4 @@
+import { Icons } from "./assets/icons";
 import { ByteUtils } from "./byte-utils";
 import { DomUtils } from "./dom-utils";
 import { BBox } from "./drawing/b-box";
@@ -22,4 +23,5 @@ export {
   SvgSmoothPath, SvgSmoothPathData, SvgSmoothPathOptions,
   SvgTempPath,
   BBox,
+  Icons,
 };
