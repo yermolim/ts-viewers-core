@@ -362,5 +362,10 @@ export declare class HtmlTemplates {
 	static readonly textDialogHtml: string;
 	static readonly stampContextButtonsHtml: string;
 }
+export declare class Thumbs {
+	static readonly thumb_error: any;
+	static readonly thumb_not_found: any;
+	static readonly thumb_unsupported: any;
+}
 
 export {};

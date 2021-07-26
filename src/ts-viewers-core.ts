@@ -18,6 +18,7 @@ import { UUID } from "./common/uuid";
 import { CustomStampService, customStampEvent, CustomStampEvent, 
   CustomStampEventDetail } from "./services/custom-stamp-service";
 import { HtmlTemplates } from "./assets/html";
+import { Thumbs } from "./assets/thumbs";
 
 export { 
   ByteUtils, 
@@ -31,7 +32,7 @@ export {
   SvgSmoothPath, SvgSmoothPathData, SvgSmoothPathOptions,
   SvgTempPath,
   BBox,
-  Icons,
+  Icons, Thumbs,
   Loader,
   ContextMenu,
   CanvasSmoothPathEditor,
