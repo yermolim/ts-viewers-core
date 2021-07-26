@@ -1,6 +1,6 @@
 {
   "name": "ts-viewers-core",
-  "version": "0.0.18",
+  "version": "0.0.19",
   "description": "browser image viewer with basic painting support",
   "module": "dist/ts-viewers-core.esm.js",
   "types": "dist/ts-viewers-core.d.ts",
