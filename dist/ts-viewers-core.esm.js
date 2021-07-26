@@ -1765,11 +1765,11 @@ class DomUtils {
         return __awaiter$1(this, void 0, void 0, function* () {
             const loadedImage = yield new Promise((resolve, reject) => {
                 const image = new Image();
-                image.onerror = (e) => {
+                image.onerror = (e, error) => {
                     if (revoke) {
                         URL.revokeObjectURL(url);
                     }
-                    console.log(`Error while loading image: ${e}`);
+                    console.log(`Error while loading image: ${(error === null || error === void 0 ? void 0 : error.message) || e.toString()}`);
                     resolve(null);
                 };
                 image.onload = () => {

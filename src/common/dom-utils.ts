@@ -54,11 +54,11 @@ export class DomUtils {
   static async loadImageAsync(url: string, revoke = false): Promise<HTMLImageElement> {  
     const loadedImage = await new Promise<HTMLImageElement>((resolve, reject) => {
       const image = new Image();
-      image.onerror = (e: string | Event) => {
+      image.onerror = (e: string | Event, error?: any) => {
         if (revoke) {        
           URL.revokeObjectURL(url);
         }
-        console.log(`Error while loading image: ${e}`);
+        console.log(`Error while loading image: ${error?.message || e.toString()}`);
         resolve(null);
       };
       image.onload = () => {
