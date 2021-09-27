@@ -9,6 +9,7 @@ import icon_back from "./icons/back.png";
 import icon_caret from "./icons/caret.png";
 import icon_circle from "./icons/circle.png";
 import icon_clockwise from "./icons/clockwise.png";
+import icon_compare from "./icons/compare.png";
 import icon_counter_clockwise from "./icons/counter-clockwise.png";
 import icon_close from "./icons/close.png";
 import icon_close2 from "./icons/close2.png";
@@ -54,6 +55,7 @@ export class Icons {
   static readonly icon_circle = icon_circle;
   static readonly icon_clockwise = icon_clockwise;
   static readonly icon_counter_clockwise = icon_counter_clockwise;
+  static readonly icon_compare = icon_compare;
   static readonly icon_close = icon_close;
   static readonly icon_close2 = icon_close2;
   static readonly icon_cloudy = icon_cloudy;

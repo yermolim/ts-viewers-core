@@ -13,6 +13,7 @@ export declare class Icons {
 	static readonly icon_circle: any;
 	static readonly icon_clockwise: any;
 	static readonly icon_counter_clockwise: any;
+	static readonly icon_compare: any;
 	static readonly icon_close: any;
 	static readonly icon_close2: any;
 	static readonly icon_cloudy: any;
