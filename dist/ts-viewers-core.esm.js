@@ -1786,6 +1786,27 @@ class DomUtils {
             return loadedImage;
         });
     }
+    static loadFileDataAsync(src) {
+        return __awaiter$1(this, void 0, void 0, function* () {
+            let data;
+            if (src instanceof Uint8Array) {
+                data = src;
+            }
+            else {
+                let blob;
+                if (typeof src === "string") {
+                    const res = yield fetch(src);
+                    blob = yield res.blob();
+                }
+                else {
+                    blob = src;
+                }
+                const buffer = yield blob.arrayBuffer();
+                data = new Uint8Array(buffer);
+            }
+            return data;
+        });
+    }
 }
 
 class Loader {

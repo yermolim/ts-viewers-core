@@ -230,6 +230,7 @@ export declare class DomUtils {
 	static runEmptyTimeout(): Promise<void>;
 	static downloadFile(blob: Blob, name?: string): void;
 	static loadImageAsync(url: string, revoke?: boolean): Promise<HTMLImageElement>;
+	static loadFileDataAsync(src: string | Blob | Uint8Array): Promise<Uint8Array>;
 }
 export interface BBox {
 	ll: Vec2;

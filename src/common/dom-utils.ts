@@ -72,4 +72,22 @@ export class DomUtils {
   
     return loadedImage;
   } 
+  
+  static async loadFileDataAsync(src: string | Blob | Uint8Array): Promise<Uint8Array> {    
+    let data: Uint8Array;
+    if (src instanceof Uint8Array) {
+      data = src;
+    } else {
+      let blob: Blob;  
+      if (typeof src === "string") {
+        const res = await fetch(src);
+        blob = await res.blob();
+      } else {
+        blob = src;
+      }  
+      const buffer = await blob.arrayBuffer();
+      data = new Uint8Array(buffer);
+    }
+    return data;
+  }
 }
