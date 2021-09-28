@@ -830,14 +830,14 @@ export function getCommonStyles(appName: string) {
       filter: invert() opacity(0.7) drop-shadow(0 0 0 var(--${appName}-color-fg-primary-final)) saturate(1000%);
     }
   
-    .loader {
+    .spinner {
       position: absolute;
       left: calc(50% - 30px);
       top: calc(50% - 30px);
       width: 60px;
       height: 60px;
     }
-    .loader div {   
+    .spinner div {   
       position: absolute; 
       width: 20px;
       height: 20px;
@@ -847,20 +847,20 @@ export function getCommonStyles(appName: string) {
       animation-timing-function: linear;
       animation-iteration-count: infinite;
     }
-    .loader div:nth-child(1) {
-      animation-name: loaderone;
+    .spinner div:nth-child(1) {
+      animation-name: spinnerone;
       background-color: var(--${appName}-color-accent-final);
     }
-    .loader div:nth-child(2) {
-      animation-name: loadertwo;
+    .spinner div:nth-child(2) {
+      animation-name: spinnertwo;
       background-color: var(--${appName}-color-fg-primary-final);  
     }
-    .loader div:nth-child(3) {  
-      animation-name: loaderthree;
+    .spinner div:nth-child(3) {  
+      animation-name: spinnerthree;
       background-color: var(--${appName}-color-fg-secondary-final);  
     }
   
-    @keyframes loaderone {
+    @keyframes spinnerone {
       from {
         left: 0;
         top: 0;
@@ -914,7 +914,7 @@ export function getCommonStyles(appName: string) {
         top: 0;   
       }
     }
-    @keyframes loadertwo {
+    @keyframes spinnertwo {
       from {
         left: 30px;
         top: 0px;
@@ -968,7 +968,7 @@ export function getCommonStyles(appName: string) {
         top: 0px;
       }
     }
-    @keyframes loaderthree {
+    @keyframes spinnerthree {
       from {
         left: 30px;
         top: 30px;

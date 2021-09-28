@@ -1014,14 +1014,14 @@ function getCommonStyles(appName) {
       filter: invert() opacity(0.7) drop-shadow(0 0 0 var(--${appName}-color-fg-primary-final)) saturate(1000%);
     }
   
-    .loader {
+    .spinner {
       position: absolute;
       left: calc(50% - 30px);
       top: calc(50% - 30px);
       width: 60px;
       height: 60px;
     }
-    .loader div {   
+    .spinner div {   
       position: absolute; 
       width: 20px;
       height: 20px;
@@ -1031,20 +1031,20 @@ function getCommonStyles(appName) {
       animation-timing-function: linear;
       animation-iteration-count: infinite;
     }
-    .loader div:nth-child(1) {
-      animation-name: loaderone;
+    .spinner div:nth-child(1) {
+      animation-name: spinnerone;
       background-color: var(--${appName}-color-accent-final);
     }
-    .loader div:nth-child(2) {
-      animation-name: loadertwo;
+    .spinner div:nth-child(2) {
+      animation-name: spinnertwo;
       background-color: var(--${appName}-color-fg-primary-final);  
     }
-    .loader div:nth-child(3) {  
-      animation-name: loaderthree;
+    .spinner div:nth-child(3) {  
+      animation-name: spinnerthree;
       background-color: var(--${appName}-color-fg-secondary-final);  
     }
   
-    @keyframes loaderone {
+    @keyframes spinnerone {
       from {
         left: 0;
         top: 0;
@@ -1098,7 +1098,7 @@ function getCommonStyles(appName) {
         top: 0;   
       }
     }
-    @keyframes loadertwo {
+    @keyframes spinnertwo {
       from {
         left: 30px;
         top: 0px;
@@ -1152,7 +1152,7 @@ function getCommonStyles(appName) {
         top: 0px;
       }
     }
-    @keyframes loaderthree {
+    @keyframes spinnerthree {
       from {
         left: 30px;
         top: 30px;
@@ -1809,28 +1809,28 @@ class DomUtils {
     }
 }
 
-class Loader {
+class Spinner {
     constructor() {
-        this._loaderElement = DomUtils.htmlToElements(Loader.loaderHtml)[0];
+        this._spinnerElement = DomUtils.htmlToElements(Spinner.spinnerHtml)[0];
     }
     show(parent, zIndex = 8) {
         if (this._isShown || !parent) {
             return;
         }
-        this._loaderElement.style.zIndex = zIndex + "";
-        this._loaderElement.style.top = parent.scrollTop + "px";
-        this._loaderElement.style.left = parent.scrollLeft + "px";
-        parent.append(this._loaderElement);
+        this._spinnerElement.style.zIndex = zIndex + "";
+        this._spinnerElement.style.top = parent.scrollTop + "px";
+        this._spinnerElement.style.left = parent.scrollLeft + "px";
+        parent.append(this._spinnerElement);
         this._isShown = true;
     }
     hide() {
-        this._loaderElement.remove();
+        this._spinnerElement.remove();
         this._isShown = false;
     }
 }
-Loader.loaderHtml = `
+Spinner.spinnerHtml = `
   <div class="abs-full-size-overlay">
-    <div class="loader">
+    <div class="spinner">
       <div></div>
       <div></div>
       <div></div>
@@ -2331,7 +2331,7 @@ class CustomStampEvent extends CustomEvent {
 class CustomStampService {
     constructor(container, eventService) {
         this._customStampsByType = new Map();
-        this._loader = new Loader();
+        this._spinner = new Spinner();
         this.onFileInput = () => {
             const files = this._fileInput.files;
             if (files.length === 0) {
@@ -2359,7 +2359,7 @@ class CustomStampService {
     destroy() {
         var _a;
         this._fileInput.remove();
-        this._loader.hide();
+        this._spinner.hide();
         (_a = this._overlay) === null || _a === void 0 ? void 0 : _a.remove();
     }
     importCustomStamps(stamps) {
@@ -2398,7 +2398,7 @@ class CustomStampService {
     }
     openImageLoaderOverlayAsync(file) {
         return __awaiter(this, void 0, void 0, function* () {
-            this._loader.show(this._container, 10);
+            this._spinner.show(this._container, 10);
             const imagePromise = new Promise((resolve, reject) => {
                 const url = URL.createObjectURL(file);
                 const img = new Image();
@@ -2417,7 +2417,7 @@ class CustomStampService {
                 image = yield imagePromise;
             }
             catch (_a) {
-                this._loader.hide();
+                this._spinner.hide();
                 return;
             }
             const imageWidth = image.width;
@@ -2494,12 +2494,12 @@ class CustomStampService {
                 this.addCustomStamp(stamp);
                 hide();
             });
-            this._loader.hide();
+            this._spinner.hide();
         });
     }
     openDesignerOverlayAsync() {
         return __awaiter(this, void 0, void 0, function* () {
-            this._loader.show(this._container, 10);
+            this._spinner.show(this._container, 10);
             const overlay = DomUtils.htmlToElements(stampDesignerHtml)[0];
             const canvasContainer = overlay.querySelector(".form-canvas-wrapper");
             const cancelButton = overlay.querySelector(".stamp-cancel");
@@ -2575,7 +2575,7 @@ class CustomStampService {
                 this.addCustomStamp(stamp);
                 hide();
             });
-            this._loader.hide();
+            this._spinner.hide();
         });
     }
 }
@@ -2623,4 +2623,4 @@ Thumbs.thumb_error = img$2;
 Thumbs.thumb_not_found = img$1;
 Thumbs.thumb_unsupported = img;
 
-export { ByteUtils, CanvasSmoothPathEditor, CloudCurveData, ContextMenu, CustomStampEvent, CustomStampService, DomUtils, EventService, HtmlTemplates, Icons, LinkedList, LinkedListNode, Loader, SmoothPath, SvgSmoothPath, SvgTempPath, Thumbs, UUID, customStampEvent, getCommonStyles };
+export { ByteUtils, CanvasSmoothPathEditor, CloudCurveData, ContextMenu, CustomStampEvent, CustomStampService, DomUtils, EventService, HtmlTemplates, Icons, LinkedList, LinkedListNode, SmoothPath, Spinner, SvgSmoothPath, SvgTempPath, Thumbs, UUID, customStampEvent, getCommonStyles };

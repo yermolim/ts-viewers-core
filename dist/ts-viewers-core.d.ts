@@ -216,9 +216,9 @@ export declare class CanvasSmoothPathEditor extends SmoothPath {
 	protected buildColorPicker(): HTMLElement;
 	protected buildWidthSliderWithButtons(): HTMLElement;
 }
-export declare class Loader {
-	static readonly loaderHtml = "\n  <div class=\"abs-full-size-overlay\">\n    <div class=\"loader\">\n      <div></div>\n      <div></div>\n      <div></div>\n    </div>\n  </div>\n  ";
-	protected readonly _loaderElement: HTMLElement;
+export declare class Spinner {
+	static readonly spinnerHtml = "\n  <div class=\"abs-full-size-overlay\">\n    <div class=\"spinner\">\n      <div></div>\n      <div></div>\n      <div></div>\n    </div>\n  </div>\n  ";
+	protected readonly _spinnerElement: HTMLElement;
 	protected _isShown: boolean;
 	constructor();
 	show(parent: HTMLElement, zIndex?: number): void;
@@ -346,7 +346,7 @@ export declare class CustomStampService {
 	private readonly _eventService;
 	private readonly _customStampsByType;
 	private readonly _fileInput;
-	private readonly _loader;
+	private readonly _spinner;
 	private _overlay;
 	constructor(container: HTMLElement, eventService: EventService);
 	destroy(): void;

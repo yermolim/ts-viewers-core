@@ -3,7 +3,7 @@ import { getCommonStyles } from "./assets/styles";
 import { ByteUtils } from "./common/byte-utils";
 import { CanvasSmoothPathEditor } from "./components/canvas-smooth-path-editor";
 import { ContextMenu } from "./components/context-menu";
-import { Loader } from "./components/loader";
+import { Spinner } from "./components/spinner";
 import { DomUtils } from "./common/dom-utils";
 import { BBox } from "./drawing/b-box";
 import { CloudCurveData } from "./drawing/clouds";
@@ -33,7 +33,7 @@ export {
   SvgTempPath,
   BBox,
   Icons, Thumbs,
-  Loader,
+  Spinner,
   ContextMenu,
   CanvasSmoothPathEditor,
   getCommonStyles,

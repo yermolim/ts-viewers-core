@@ -1,6 +1,6 @@
 import { Icons } from "../assets/icons";
 import { CanvasSmoothPathEditor } from "../components/canvas-smooth-path-editor";
-import { Loader } from "../components/loader";
+import { Spinner } from "../components/spinner";
 import { DomUtils } from "../common/dom-utils";
 import { CustomStampCreationInfo } from "../drawing/stamps";
 import { UUID } from "../common/uuid";
@@ -94,7 +94,7 @@ export class CustomStampService {
   private readonly _customStampsByType = new Map<string, CustomStampCreationInfo>();
   private readonly _fileInput: HTMLInputElement;
   
-  private readonly _loader = new Loader();
+  private readonly _spinner = new Spinner();
 
   private _overlay: HTMLElement;
 
@@ -124,7 +124,7 @@ export class CustomStampService {
    */
   destroy() {
     this._fileInput.remove();
-    this._loader.hide();
+    this._spinner.hide();
     this._overlay?.remove();
   }
 
@@ -202,8 +202,8 @@ export class CustomStampService {
 
   // TODO: move to the separate class
   private async openImageLoaderOverlayAsync(file: File) {
-    // show loader while an image is being loaded
-    this._loader.show(this._container, 10);
+    // show spinner while an image is being loaded
+    this._spinner.show(this._container, 10);
     
     // load the image
     const imagePromise = new Promise<HTMLImageElement>((resolve, reject) => {
@@ -224,7 +224,7 @@ export class CustomStampService {
       image = await imagePromise;   
     } catch {
       // cancel the operation if the image cannot be loaded
-      this._loader.hide();
+      this._spinner.hide();
       return;
     }
     const imageWidth = image.width;
@@ -317,13 +317,13 @@ export class CustomStampService {
       hide();
     });
 
-    this._loader.hide();
+    this._spinner.hide();
   }
   
   // TODO: move to the separate class
   private async openDesignerOverlayAsync() {
-    // show loader while an image is being loaded
-    this._loader.show(this._container, 10);
+    // show spinner while an image is being loaded
+    this._spinner.show(this._container, 10);
     
     // load the image
 
@@ -418,6 +418,6 @@ export class CustomStampService {
       hide();
     });
 
-    this._loader.hide();
+    this._spinner.hide();
   }
 }
