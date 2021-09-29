@@ -226,7 +226,7 @@ export function getCommonStyles(appName: string) {
     .command-panel-subitem.accent.on {
       box-shadow: 0 0 10px var(--${appName}-color-fg-accent-final);
     }
-    :not(.undoable-commands) #button-command-undo,
+    :not(.undoable-commands):not(.mode-annotation) #button-command-undo,
     :not(.annotation-selected) #button-annotation-edit-text,
     :not(.annotation-selected) #button-annotation-delete,
     :not(.stamp-annotator-data-undoable) #button-annotation-stamp-undo,
