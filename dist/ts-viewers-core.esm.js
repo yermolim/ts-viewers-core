@@ -410,7 +410,7 @@ function getCommonStyles(appName) {
     .command-panel-subitem.accent.on {
       box-shadow: 0 0 10px var(--${appName}-color-fg-accent-final);
     }
-    :not(.undoable-commands):not(.mode-annotation) #button-command-undo,
+    :not(.mode-annotation):not(.undoable-commands) #button-command-undo,
     :not(.annotation-selected) #button-annotation-edit-text,
     :not(.annotation-selected) #button-annotation-delete,
     :not(.stamp-annotator-data-undoable) #button-annotation-stamp-undo,
@@ -430,7 +430,7 @@ function getCommonStyles(appName) {
       transform: scale(0);
       transition: opacity 0.1s ease-in, transform 0s linear 0.1s;
     }
-    .undoable-commands #button-command-undo,
+    .mode-annotation.undoable-commands #button-command-undo,
     .annotation-selected #button-annotation-edit-text,
     .annotation-selected #button-annotation-delete,
     .stamp-annotator-data-undoable #button-annotation-stamp-undo,
