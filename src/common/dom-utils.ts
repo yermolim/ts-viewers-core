@@ -72,7 +72,7 @@ export class DomUtils {
   
     return loadedImage;
   } 
-  
+
   static async loadFileDataAsync(src: string | Blob | Uint8Array): Promise<Uint8Array> {    
     let data: Uint8Array;
     if (src instanceof Uint8Array) {
@@ -81,6 +81,9 @@ export class DomUtils {
       let blob: Blob;  
       if (typeof src === "string") {
         const res = await fetch(src);
+        if (!res.ok) {
+          throw new Error(`${res.status}: ${res.statusText}`);
+        }
         blob = await res.blob();
       } else {
         blob = src;

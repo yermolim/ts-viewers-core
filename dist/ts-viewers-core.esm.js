@@ -1796,6 +1796,9 @@ class DomUtils {
                 let blob;
                 if (typeof src === "string") {
                     const res = yield fetch(src);
+                    if (!res.ok) {
+                        throw new Error(`${res.status}: ${res.statusText}`);
+                    }
                     blob = yield res.blob();
                 }
                 else {
